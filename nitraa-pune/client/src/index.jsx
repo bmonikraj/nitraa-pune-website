@@ -1,8 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Body from './Components/Body';
+import Container from 'react-bootstrap/Container';
+import Header from './Components/Header';
+import Footer from './Components/Footer';
 
 const app = document.getElementById("root");
 
-ReactDOM.render(<Body />, app);
-
+ReactDOM.render(
+    <Container>
+        <Header/>
+        <Footer/>
+    </Container>
+,app);
