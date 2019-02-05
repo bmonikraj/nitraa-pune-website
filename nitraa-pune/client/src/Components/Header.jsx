@@ -5,6 +5,7 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import MediaQuery from 'react-responsive';
 import MaterialIcons from 'material-icons-react';
 import Container from 'react-bootstrap/Container';
+import { Link, Route, Switch } from 'react-router-dom';
 
 import '../font.css';
 
@@ -52,7 +53,7 @@ class Header extends React.Component {
                         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                         <Navbar.Collapse id="responsive-navbar-nav">
                             <Nav className="mr-auto">
-                            <Nav.Link href="#features" style={itemStyle} >
+                            <Nav.Link href="/bolo" style={itemStyle} >
                                 <MaterialIcons icon="info"/>&nbsp;About Us
                             </Nav.Link>
                             <Nav.Link href="#pricing" style={itemStyle}>
