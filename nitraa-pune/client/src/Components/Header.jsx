@@ -80,7 +80,7 @@ class Header extends React.Component {
                             <Nav.Link href="#deets" style={itemStyle}>
                                 <MaterialIcons icon="person_pin_circle"/>&nbsp;Alumni Nearby
                             </Nav.Link>
-                            <Nav.Link href="#memes" style={itemStyle}>
+                            <Nav.Link href="/login" style={itemStyle}>
                                 <MaterialIcons icon="lock"/>&nbsp;Login
                             </Nav.Link>
                             </Nav>

@@ -8,7 +8,6 @@ import MaterialIcons from 'material-icons-react';
 import Container from 'react-bootstrap/Container';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
-import { SocialIcon } from 'react-social-icons';
 import '../font.css';
 
 class Footer extends React.Component{
@@ -24,7 +23,7 @@ class Footer extends React.Component{
                 <Navbar bg="light" fixed="bottom">
                     
                         <MediaQuery query="(min-device-width: 769px)">
-                            <Row>
+                            <Row style={{paddingLeft : "35%"}}>
                                 <Col xs={{span: 1, offset:1}}>
                                     <Nav.Link href="#">
                                         <OverlayTrigger
@@ -36,7 +35,7 @@ class Footer extends React.Component{
                                             </Tooltip>
                                         }
                                         >
-                                            <MaterialIcons icon="call" size="large"/>
+                                            <MaterialIcons icon="call" size="small"/>
                                         </OverlayTrigger>
                                     </Nav.Link>
                                 </Col>
@@ -51,7 +50,7 @@ class Footer extends React.Component{
                                                 </Tooltip>
                                             }
                                             >
-                                                <MaterialIcons icon="help" size="large"/>
+                                                <MaterialIcons icon="help" size="small"/>
                                             </OverlayTrigger>
                                     </Nav.Link>
                                 </Col>
@@ -66,7 +65,7 @@ class Footer extends React.Component{
                                                 </Tooltip>
                                             }
                                             >
-                                                <MaterialIcons icon="phonelink_lock" size="large"/>
+                                                <MaterialIcons icon="phonelink_lock" size="small"/>
                                             </OverlayTrigger>
                                     </Nav.Link>
                                 </Col>
@@ -81,49 +80,27 @@ class Footer extends React.Component{
                                                 </Tooltip>
                                             }
                                             >
-                                                <MaterialIcons icon="ballot" size="large"/>
+                                                <MaterialIcons icon="ballot" size="small"/>
                                             </OverlayTrigger>
                                     </Nav.Link>
-                                </Col>
-                                <Col xs={{span:1, offset:1}}>
-                                    <SocialIcon url="https://facebook.com" style={{width:50, height:50}}/>
-                                </Col>
-                                <Col xs={{span:1}}>
-                                    <SocialIcon url="https://web.whatsapp.com" style={{width:50, height:50}}/>
-                                </Col>
-                                <Col xs={{span:1}}>
-                                        <SocialIcon url="https://linkedin.com" style={{width:50, height:50}}/>
                                 </Col>
                             </Row>
                         </MediaQuery>
                         <MediaQuery query="(max-device-width: 768px)">
                             <Row>
                                 <Col xs={12}>
-                                <Row>
+                                <Row style={{paddingLeft : "35%"}}>
                                     <Col xs={{span:3}}>
-                                        <MaterialIcons icon="call" size="large"/>
+                                        <MaterialIcons icon="call" size="small"/>
                                     </Col>
                                     <Col xs={3}>
-                                        <MaterialIcons icon="help" size="large"/>                                        
+                                        <MaterialIcons icon="help" size="small"/>                                        
                                     </Col>
                                     <Col xs={3}>
-                                        <MaterialIcons icon="phonelink_lock" size="large"/>                                        
+                                        <MaterialIcons icon="phonelink_lock" size="small"/>                                        
                                     </Col>
                                     <Col xs={3}>
-                                        <MaterialIcons icon="ballot" size="large"/>                                       
-                                    </Col>
-                                </Row>
-                                </Col>
-                                <Col xs={12}>
-                                <Row>
-                                    <Col xs={{span:3, offset:2}}>
-                                        <SocialIcon url="https://facebook.com"/>
-                                    </Col>
-                                    <Col xs={3}>
-                                        <SocialIcon url="https://web.whatsapp.com"/>                                        
-                                    </Col>
-                                    <Col xs={3}>
-                                        <SocialIcon url="https://linkedin.com"/>                                        
+                                        <MaterialIcons icon="ballot" size="small"/>                                       
                                     </Col>
                                 </Row>
                                 </Col>

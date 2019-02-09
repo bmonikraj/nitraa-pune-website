@@ -8,9 +8,7 @@ class Bolo extends React.Component{
     render(){
         return(
             <Container>
-                <Header/>
-                <Footer/>
-                <Footer/>
+                BOLO
             </Container>
         )
     }
