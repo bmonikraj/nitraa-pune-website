@@ -5,18 +5,43 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import MediaQuery from 'react-responsive';
 import MaterialIcons from 'material-icons-react';
 import Container from 'react-bootstrap/Container';
-import { Link, Route, Switch } from 'react-router-dom';
 
 import '../font.css';
 
 class Header extends React.Component {
+
+    constructor(props){
+        super(props);
+        
+    }
+
     render(){
 
         const itemStyle = {
             display:"inline-flex", 
             verticleAlign:"middle",
-            fontWeight: "bold"
+            fontWeight: "bold",
         }
+
+        const itemStyleLogin = {
+            display:"inline-flex", 
+            verticleAlign:"middle",
+            fontWeight: "bold",
+            display : localStorage.getItem('authtoken')?"none":"block"
+        }
+
+        const itemStyleLogout = {
+            display:"inline-flex", 
+            verticleAlign:"middle",
+            fontWeight: "bold",
+            display : localStorage.getItem('authtoken')?"block":"none"
+        }
+
+        function logoutFunc(){
+            localStorage.removeItem('authtoken');
+            window.open("/", "_self");
+        }
+
         return (
                 <Container>
                     <Navbar collapseOnSelect expand="md" bg="light" fixed="top">                    
@@ -80,8 +105,11 @@ class Header extends React.Component {
                             <Nav.Link href="#deets" style={itemStyle}>
                                 <MaterialIcons icon="person_pin_circle"/>&nbsp;Alumni Nearby
                             </Nav.Link>
-                            <Nav.Link href="/login" style={itemStyle}>
-                                <MaterialIcons icon="lock"/>&nbsp;Login
+                            <Nav.Link href="/login" style={itemStyleLogin} ref="login_link">
+                                &nbsp;Login
+                            </Nav.Link>
+                            <Nav.Link onClick={logoutFunc} style={itemStyleLogout} ref="logout_link">
+                                &nbsp;Logout
                             </Nav.Link>
                             </Nav>
                         </Navbar.Collapse>

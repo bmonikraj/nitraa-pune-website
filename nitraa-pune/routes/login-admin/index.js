@@ -17,7 +17,8 @@ router.post('/', function(req, res, next) {
     var password = req.body.password;
     if (email == 'admin@nitraa.pune' && password == 'admin-nitraa'){
         jwt_token = jwt.sign({userid : 'admin@nitraa.pune'}, jwt_salt);
-        res.json({status:'success', jwt:jwt_token});
+        res.set('authtoken', jwt_token);
+        res.json({status:'success'});
     }
     else{
         res.json({status:'fail', message:'User ID or Password didn\'t match. Authentication failed'});
