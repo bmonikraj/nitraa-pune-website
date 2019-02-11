@@ -50,7 +50,7 @@ class Login extends React.Component{
                     .then(function(response){
                         if (response.data.status == 'success'){
                             
-                            window.open("/", "_self");
+                            window.open("/admin-dashboard", "_self");
                             localStorage.setItem('authtoken',response.headers.authtoken);
                         }
                         else{
