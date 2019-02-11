@@ -5,7 +5,12 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 var loginAdminRouter = require('./routes/login-admin/index');
+<<<<<<< HEAD
 var adminModeratorCRUDRouter = require('./routes/admin-moderator-CRUD/index');
+=======
+var signinUserRouter = require('./routes/userSignin/index')
+var signupUserRouter = require('./routes/userSignup/index')
+>>>>>>> 218ae490275c90ade9c72a777e91c32171777e23
 
 var app = express();
 
@@ -15,20 +20,27 @@ app.set('view engine', 'jade');
 
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({
+  extended: false
+}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/login-admin', loginAdminRouter);
+<<<<<<< HEAD
 app.use('/admin-moderator-crud', adminModeratorCRUDRouter);
+=======
+app.use('/signin-user', signinUserRouter);
+app.use('/signup-user', signupUserRouter);
+>>>>>>> 218ae490275c90ade9c72a777e91c32171777e23
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
