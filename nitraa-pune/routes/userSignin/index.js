@@ -31,7 +31,7 @@ router.post('/', function (req, res, next) {
                     if (result == null) {
                         db.close();
                         res.json({
-                            status: "failure",
+                            status: "fail",
                             message: "Service Failed!!"
                         });
                     } else {
