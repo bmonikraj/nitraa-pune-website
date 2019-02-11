@@ -3,9 +3,9 @@ var express = require('express'),
     mongo = require('mongodb').MongoClient,
     bodyParser = require('body-parser'),
     app = express();
-var urlMongo = require('../../constant/mongodbAddress/index');
+var urlMongo = require('../constant/mongodbAddress/index');
 var jwt = require('jsonwebtoken');
-var jwt_salt = require('../../constant/jwt/index');
+var jwt_salt = require('../constant/jwt/index');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
@@ -37,18 +37,18 @@ router.post('/', function (req, res, next) {
                     } else {
                         db.close();
                         var jwt_token = jwt.sign({
-                            db_id: result._id
+                            usermail: req.body.email
                         }, jwt_salt);
                         if (jwt_token) {
                             res.set({
-                                'jwt_token': jwt_token
+                                'authtoken': jwt_token
                             });
                             res.json({
                                 status: "success",
                             });
                         } else {
                             res.json({
-                                status: "failure",
+                                status: "fail",
                                 message: "Creation of customer token failed!"
                             });
                         }
@@ -56,7 +56,7 @@ router.post('/', function (req, res, next) {
                 } else {
                     db.close();
                     res.json({
-                        status: "failure",
+                        status: "fail",
                         message: "Authentication Failed!!"
                     });
                 }
@@ -64,7 +64,7 @@ router.post('/', function (req, res, next) {
         } else {
             db.close();
             res.json({
-                status: "failure",
+                status: "fail",
                 message: "Error in signin!!"
             });
 

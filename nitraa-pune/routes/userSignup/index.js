@@ -3,9 +3,9 @@ var express = require('express'),
     mongo = require('mongodb').MongoClient,
     bodyParser = require('body-parser'),
     app = express();
-var urlMongo = require('../../constant/mongodbAddress/index');
+var urlMongo = require('../constant/mongodbAddress/index');
 var jwt = require('jsonwebtoken');
-var jwt_salt = require('../../constant/jwt/index');
+var jwt_salt = require('../constant/jwt/index');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
@@ -35,7 +35,7 @@ router.post('/', function (req, res, next) {
                 if (err) {
                     db.close();
                     res.json({
-                        status: "failure",
+                        status: "fail",
                         message: "Error in signup!!"
                     });
                 } else {
@@ -49,7 +49,7 @@ router.post('/', function (req, res, next) {
         } else {
             db.close();
             res.json({
-                status: "failure",
+                status: "fail",
                 message: "Error in signup!!"
             });
 
