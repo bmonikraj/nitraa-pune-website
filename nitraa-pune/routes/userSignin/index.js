@@ -37,7 +37,7 @@ router.post('/', function (req, res, next) {
                     } else {
                         db.close();
                         var jwt_token = jwt.sign({
-                            usermail: req.body.email
+                            tid: result._id
                         }, jwt_salt);
                         if (jwt_token) {
                             res.set({
