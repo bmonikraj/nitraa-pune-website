@@ -12,7 +12,25 @@ class Header extends React.Component {
 
     constructor(props){
         super(props);
-        
+        this.state = {
+            profileURL : "/",
+            profileTab : "Dashboard"
+        }
+    }
+
+    componentDidMount(){
+        if(localStorage.getItem('profile')){
+            if(localStorage.getItem('profile')=='admin'){
+                this.setState({profileURL : '/admin-dashboard'});
+            }
+            if(localStorage.getItem('profile')=='moderator'){
+                this.setState({profileURL : '/moderator-dashboard'});
+            }
+            if(localStorage.getItem('profile')=='user'){
+                this.setState({profileURL : '/user-dashboard'});
+                this.setState({profileTab : "Profile"});
+            }
+        }
     }
 
     render(){
@@ -28,6 +46,13 @@ class Header extends React.Component {
             verticleAlign:"middle",
             fontWeight: "bold",
             display : localStorage.getItem('authtoken')?"none":"block"
+        }
+
+        const itemStyleProfile = {
+            display:"inline-flex", 
+            verticleAlign:"middle",
+            fontWeight: "bold",
+            display : localStorage.getItem('authtoken')?"block":"none"
         }
 
         const itemStyleLogout = {
@@ -104,6 +129,9 @@ class Header extends React.Component {
                             <Nav>
                             <Nav.Link href="#deets" style={itemStyle}>
                                 <MaterialIcons icon="person_pin_circle"/>&nbsp;Alumni Nearby
+                            </Nav.Link>
+                            <Nav.Link href={this.state.profileURL} style={itemStyleProfile} ref="login_link">
+                                &nbsp;{this.state.profileTab}
                             </Nav.Link>
                             <Nav.Link href="/login" style={itemStyleLogin} ref="login_link">
                                 &nbsp;Login

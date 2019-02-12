@@ -82,7 +82,7 @@ router.delete('/', function (req, res, next) {
                     }
                     else {
                         db.close();
-                        res.json({ status: 'success', list: array_res });
+                        res.json({ status: 'success'});
                     }
                 })
             }

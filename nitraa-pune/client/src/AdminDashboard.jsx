@@ -11,6 +11,7 @@ import Sweetalert from 'react-bootstrap-sweetalert';
 import axios from 'axios';
 import Header from './Components/Header';
 import Footer from './Components/Footer';
+import { runInThisContext } from 'vm';
 
 class AdminDashboard extends React.Component{
 
@@ -96,8 +97,10 @@ class AdminDashboard extends React.Component{
         });
     }
 
-    removeRow(){
+    removeRow(element){
         var _self = this;
+        console.log(element.target);
+        var _element_value = element.target.value;
         axios({
             url : '/admin-moderator-crud',
             method : 'delete',
@@ -105,17 +108,19 @@ class AdminDashboard extends React.Component{
                 authtoken:localStorage.getItem('authtoken')
             },
             data : {
-                username : "dummy",
+                username : _element_value
             }
         })
         .then(function(response){
             console.log(response);
             if(response.data.status == 'success'){
                 var new_array = _self.state.table_data;
-                new_array.filter(function(v,i,a){
-                    return v.username == "dummy";
-                });
-                _self.setState({table_data : new_array})
+                var _p_ele = _element_value;
+                var array_filtered = new_array.filter(function(v,i,a){
+                    return v.username != _p_ele;
+                }, _p_ele);
+                console.log(array_filtered);
+                _self.setState({table_data : array_filtered});
             }
             else{
                 _self.setState({loginAlertText : response.data.message});
@@ -134,6 +139,8 @@ class AdminDashboard extends React.Component{
 
     render(){
 
+        const _p = this;
+
         const styleTableDiv = {
             paddingTop : '15vh',
             paddingBottom : '15vh'
@@ -151,22 +158,22 @@ class AdminDashboard extends React.Component{
                             <th>#</th>
                             <th>Username</th>
                             <th>Password</th>
-                            <th><Button variant="link" onClick={this.addRow}><MaterialIcons icon="add_circle" /></Button></th>
+                            <th><Button variant="link" onClick={this.clearAddInput}><MaterialIcons icon="backspace" /></Button></th>
                         </tr>
                         <tr>
-                            <td>Input</td>
+                            <td>Add Moderator</td>
                             <td><Form.Group controlId="formBasicText"><Form.Control placeholder="Add Username" ref={usernameInput => this.usernameInput = usernameInput}/></Form.Group></td>
                             <td><Form.Group controlId="formBasicText"><Form.Control placeholder="Add Password" ref={passwordInput => this.passwordInput = passwordInput}/></Form.Group></td>
-                            <td><Button variant="link" onClick={this.clearAddInput}><MaterialIcons icon="remove_circle" /></Button></td>
+                            <td><Button variant="outline-success" onClick={this.addRow}>Add</Button></td>
                         </tr>
                         {
-                            this.state.table_data.map(function(row, index){
+                            this.state.table_data.map(function(row, index){                                
                                 return (
                                     <tr key={row.username}>
                                         <td>{index+1}</td>
                                         <td>{row.username}</td>
                                         <td>{row.password}</td>
-                                        <td><Button variant="link"><MaterialIcons icon="remove_circle" /></Button></td>
+                                        <td><Button variant="outline-danger" value={row.username} onClick={_p.removeRow}>Remove</Button></td>
                                     </tr>
                                 )
                             })

@@ -11,143 +11,168 @@ import axios from 'axios';
 import Header from './Components/Header';
 import Footer from './Components/Footer';
 
-class Login extends React.Component{
+class Login extends React.Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
         this.handleLogin = this.handleLogin.bind(this);
         this.handleLoginAlertClose = this.handleLoginAlertClose.bind(this);
         this.handleLoginAlertOpen = this.handleLoginAlertOpen.bind(this);
         this.state = {
-            loginAlertShow : false,
-            loginAlertText : ""
+            loginAlertShow: false,
+            loginAlertText: ""
         }
     }
 
-    handleLoginAlertOpen(){
-        this.setState({loginAlertShow : true});
+    handleLoginAlertOpen() {
+        this.setState({ loginAlertShow: true });
     }
 
-    handleLoginAlertClose(){
-        this.setState({loginAlertShow : false});
+    handleLoginAlertClose() {
+        this.setState({ loginAlertShow: false });
         this.email.value = "";
         this.password.value = "";
     }
 
-    handleLogin(event){
-        if(event.target.value == 'login'){
-            if(this.email.value.split("@")[1] == 'nitraa.pune'){
-                if(this.email.value.split("@")[0] == 'admin'){
+    handleLogin(event) {
+        console.log(event.target);
+        if (event.target.value == 'login') {
+            if (this.email.value.split("@")[1] == 'nitraa.pune') {
+                if (this.email.value.split("@")[0] == 'admin') {
                     var _self_parent = this;
                     axios({
-                        method : 'post',
-                        url : '/login-admin',
-                        data : {
-                            email : this.email.value,
-                            password : this.password.value
+                        method: 'post',
+                        url: '/login-admin',
+                        data: {
+                            email: this.email.value,
+                            password: this.password.value
                         }
                     })
-                    .then(function(response){
-                        if (response.data.status == 'success'){
-                            
-                            window.open("/admin-dashboard", "_self");
-                            localStorage.setItem('authtoken',response.headers.authtoken);
-                        }
-                        else{
-                            _self_parent.setState({loginAlertText : response.data.message});
-                            _self_parent.handleLoginAlertOpen();
-                        }
-                    })
-                    .catch(function(error){
-                        console.log(error);
-                    });
+                        .then(function (response) {
+                            if (response.data.status == 'success') {
+
+                                window.open("/", "_self");
+                                localStorage.setItem('authtoken', response.headers.authtoken);
+                                localStorage.setItem('profile', 'admin');
+                            }
+                            else {
+                                _self_parent.setState({ loginAlertText: response.data.message });
+                                _self_parent.handleLoginAlertOpen();
+                            }
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
                 }
-                else{
+                else {
                     console.log('moderator login');
                 }
             }
-            else{
-                console.log("User Login");
+            else {
+                var _self_parent = this;
+                axios({
+                    method: 'post',
+                    url: '/signin-user',
+                    data: {
+                        email: this.email.value,
+                        password: this.password.value
+                    }
+                })
+                    .then(function (response) {
+                        if (response.data.status == 'success') {
+
+                            window.open("/", "_self");
+                            localStorage.setItem('authtoken', response.headers.authtoken);
+                            localStorage.setItem('profile', 'user');
+                        }
+                        else {
+                            _self_parent.setState({ loginAlertText: response.data.message });
+                            _self_parent.handleLoginAlertOpen();
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
             }
-        }   
-        else if(event.target.value == 'recover'){
+        }
+        else if (event.target.value == 'recover') {
 
-        }   
-        else{
+        }
+        else {
 
-        } 
+        }
     }
 
-    render(){
+    render() {
         const formStyle = {
-            marginTop : "23vh"
+            marginTop: "23vh"
         }
         const formLabelStyle = {
-            color : "#ffffff"
+            color: "#ffffff"
         }
-        return(
+        return (
             <Container>
-                <Header/>
+                <Header />
                 <Form style={formStyle}>
                     <Row>
-                        <Col xs={12} md={{span:6 , offset: 3}}>
+                        <Col xs={12} md={{ span: 6, offset: 3 }}>
                             <Form.Group controlId="formBasicEmail">
                                 <Form.Label style={formLabelStyle}>Email address </Form.Label>
-                                <Form.Control type="email" placeholder="For unique identification" ref={email => this.email = email}/>
+                                <Form.Control type="email" placeholder="For unique identification" ref={email => this.email = email} />
                                 <Form.Text className="text-muted">
-                                We'll never share your email with anyone else.
+                                    We'll never share your email with anyone else.
                                 </Form.Text>
                             </Form.Group>
                         </Col>
                     </Row>
 
                     <Row>
-                        <Col xs={12} md={{span:6 , offset:3}}>
+                        <Col xs={12} md={{ span: 6, offset: 3 }}>
                             <Form.Group controlId="formBasicPassword">
                                 <Form.Label style={formLabelStyle}>Password</Form.Label>
-                                <Form.Control type="password" placeholder="For secure access" ref={password => this.password = password}/>
+                                <Form.Control type="password" placeholder="For secure access" ref={password => this.password = password} />
                             </Form.Group>
                         </Col>
                     </Row>
                     <Row>
-                        <Col xs={12} md={{span:6 , offset:3}}>
+                        <Col xs={12} md={{ span: 6, offset: 3 }}>
                             <Row>
                                 <Col xs={2}>
                                     <Button variant="primary" value="login" onClick={this.handleLogin}>
-                                        Submit 
+                                        Submit
                                     </Button>
                                 </Col>
-                                <Col xs={{span:2, offset:2}}>
-                                    <Button variant="primary" value="recover" onClick={this.handleLogin}> 
-                                        Recover 
+                                <Col xs={{ span: 2, offset: 2 }}>
+                                    <Button variant="primary" value="recover" onClick={this.handleLogin}>
+                                        Recover
                                     </Button>
                                 </Col>
-                                <Col xs={{span:2, offset:2}}>
+                                <Col xs={{ span: 2, offset: 2 }}>
                                     <Button variant="primary" value="register" onClick={this.handleLogin}>
-                                        Register 
+                                        Register
                                     </Button>
                                 </Col>
                             </Row>
                         </Col>
                     </Row>
-                    <Row style={{paddingTop : 20}}>
-                        <Col xs={12} md={{span:6 , offset:3}}>
+                    <Row style={{ paddingTop: 20 }}>
+                        <Col xs={12} md={{ span: 6, offset: 3 }}>
                             <Form.Label style={formLabelStyle}>One click login with</Form.Label>
                             <Row>
                                 <Col>
-                                    <SocialIcon url="https://facebook.com" network="facebook" bgColor="#ffffff"/>
+                                    <SocialIcon url="https://facebook.com" network="facebook" bgColor="#ffffff" />
                                 </Col>
                                 <Col>
-                                    <SocialIcon url="https://linkedin.com" network="linkedin" bgColor="#ffffff"/>
+                                    <SocialIcon url="https://linkedin.com" network="linkedin" bgColor="#ffffff" />
                                 </Col>
                             </Row>
                         </Col>
                     </Row>
                 </Form>
-                <Sweetalert danger confirmBtnText="I Understand" confirmBtnBsStyle="danger" title="Authentication Error" show = {this.state.loginAlertShow} onConfirm = {this.handleLoginAlertClose}>
+                <Sweetalert danger confirmBtnText="I Understand" confirmBtnBsStyle="danger" title="Authentication Error" show={this.state.loginAlertShow} onConfirm={this.handleLoginAlertClose}>
                     {this.state.loginAlertText}
                 </Sweetalert>
-                <Footer/>
+                <Footer />
             </Container>
         )
     }
