@@ -65,7 +65,30 @@ class Login extends React.Component {
                         });
                 }
                 else {
-                    console.log('moderator login');
+                    var _self_parent = this;
+                    axios({
+                        method: 'post',
+                        url: '/login-moderator',
+                        data: {
+                            email: this.email.value,
+                            password: this.password.value
+                        }
+                    })
+                        .then(function (response) {
+                            if (response.data.status == 'success') {
+
+                                window.open("/", "_self");
+                                localStorage.setItem('authtoken', response.headers.authtoken);
+                                localStorage.setItem('profile', 'moderator');
+                            }
+                            else {
+                                _self_parent.setState({ loginAlertText: response.data.message });
+                                _self_parent.handleLoginAlertOpen();
+                            }
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
                 }
             }
             else {

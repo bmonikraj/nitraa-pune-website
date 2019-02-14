@@ -6,8 +6,9 @@ var logger = require('morgan');
 
 var loginAdminRouter = require('./routes/login-admin/index');
 var adminModeratorCRUDRouter = require('./routes/admin-moderator-CRUD/index');
-var signinUserRouter = require('./routes/userSignin/index')
-var signupUserRouter = require('./routes/userSignup/index')
+var signinUserRouter = require('./routes/userSignin/index');
+var signupUserRouter = require('./routes/userSignup/index');
+var loginModeratorRouter = require('./routes/moderator-auth/index');
 
 var app = express();
 
@@ -27,6 +28,7 @@ app.use('/login-admin', loginAdminRouter);
 app.use('/admin-moderator-crud', adminModeratorCRUDRouter);
 app.use('/signin-user', signinUserRouter);
 app.use('/signup-user', signupUserRouter);
+app.use('/login-moderator', loginModeratorRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
