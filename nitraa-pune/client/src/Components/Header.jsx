@@ -109,7 +109,7 @@ class Header extends React.Component {
                             <Nav.Link href="#pricing" style={itemStyle}>
                                 <MaterialIcons icon="people"/>&nbsp;Community
                             </Nav.Link>
-                            <Nav.Link href="#pricing" style={itemStyle}>
+                            <Nav.Link href="/gallery" style={itemStyle}>
                                 <MaterialIcons icon="photo"/>&nbsp;Gallery
                             </Nav.Link>
                             <NavDropdown title="Initiatives" id="collasible-nav-dropdown" style={itemStyle}>

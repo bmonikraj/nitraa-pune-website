@@ -4,6 +4,7 @@ import Home from './Home';
 import { Route } from 'react-router-dom';
 import Login from './Login';
 import AdminDashboard from './AdminDashboard';
+import Gallery from './Gallery';
 
 class App extends React.Component{
     render(){
@@ -12,6 +13,7 @@ class App extends React.Component{
                 <Route exact={true} path='/' component={Home} />
                 <Route exact={true} path='/login' component={Login} />
                 <Route exact={true} path='/admin-dashboard' component={AdminDashboard} />
+                <Route exact={true} path='/gallery' component={Gallery} />
             </React.Fragment>
         )
     }
