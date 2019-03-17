@@ -201,7 +201,7 @@ class ModeratorDashboard extends React.Component{
                         </Tabs>
                     </div>
                 <Footer/>
-                <Sweetalert type={this.state.ModeratorAlertStyle} confirmBtnText="I Understand" confirmBtnBsStyle="primary" title="Moderator Utility Error" show={this.state.ModeratorAlertShow} onConfirm={this.handleModeratorAlertClose}>
+                <Sweetalert type={this.state.ModeratorAlertStyle} confirmBtnText="I Understand" confirmBtnBsStyle="primary" title="Moderator Utility" show={this.state.ModeratorAlertShow} onConfirm={this.handleModeratorAlertClose}>
                     {this.state.ModeratorAlertText}
                 </Sweetalert>
             </Container>
