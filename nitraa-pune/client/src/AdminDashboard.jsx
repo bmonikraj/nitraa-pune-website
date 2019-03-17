@@ -181,7 +181,7 @@ class AdminDashboard extends React.Component{
                     </Table>
                 </div>
                 <Footer/>
-                <Sweetalert danger confirmBtnText="I Understand" confirmBtnBsStyle="danger" title="Data Error" show = {this.state.loginAlertShow} onConfirm = {this.handleLoginAlertClose}>
+                <Sweetalert danger confirmBtnText="I Understand" confirmBtnBsStyle="primary" title="Data Error" show = {this.state.loginAlertShow} onConfirm = {this.handleLoginAlertClose}>
                     {this.state.loginAlertText}
                 </Sweetalert>
             </Container>

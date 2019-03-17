@@ -8,6 +8,7 @@ import GalleryGrid from 'react-photo-gallery';
 import Lightbox from 'react-images';
 import Header from './Components/Header';
 import Footer from './Components/Footer';
+import axios from 'axios';
 
 class Gallery extends React.Component {
 
@@ -21,16 +22,46 @@ class Gallery extends React.Component {
     }
 
     componentDidMount(){
-        this.setState({
-            photos : [
-                { src: process.env.PUBLIC_URL + 'images/3.jpg', width : 1, height : 1, caption: 'Photo by Me' },
-                { src: process.env.PUBLIC_URL + 'images/2.jpg', width : 1, height : 1 },
-                { src: process.env.PUBLIC_URL + 'images/1.jpg', width : 1, height : 1 },
-                { src: process.env.PUBLIC_URL + 'images/3.jpg', width : 1, height : 1 },
-                { src: process.env.PUBLIC_URL + 'images/2.jpg', width : 1, height : 1 },
-                { src: process.env.PUBLIC_URL + 'images/1.jpg', width : 1, height : 1 }
-            ]
-        });
+
+        var _self = this;
+        axios({
+            method : "get",
+            url : "/moderator-gallery",
+        })
+        .then(function(response){
+            if(response.data.status === 'success'){
+                console.log(response.data.list);
+                if(response.data.list.length === 0){
+                    alert("Blank Array")
+                }
+                else{
+                    var p = [];
+                    for(var i=0; i<response.data.list.length; i++){
+                        p.push({src : process.env.PUBLIC_URL + 'images/gallery/'+response.data.list[i]._id + '.' + response.data.list[i].EXT, width : 1, height : 1, caption : response.data.list[i].caption});
+                        if(i===response.data.list.length-1){
+                            _self.setState({photos : p});
+                        }
+                    }
+                }
+            }
+            else{
+                alert(response.data.message)
+            }
+        })
+        .catch(function(err){
+            console.log(err);
+        })
+
+        // this.setState({
+        //     photos : [
+        //         { src: process.env.PUBLIC_URL + 'images/3.jpg', width : 1, height : 1, caption: 'Photo by Me' },
+        //         { src: process.env.PUBLIC_URL + 'images/2.jpg', width : 1, height : 1 },
+        //         { src: process.env.PUBLIC_URL + 'images/1.jpg', width : 1, height : 1 },
+        //         { src: process.env.PUBLIC_URL + 'images/3.jpg', width : 1, height : 1 },
+        //         { src: process.env.PUBLIC_URL + 'images/2.jpg', width : 1, height : 1 },
+        //         { src: process.env.PUBLIC_URL + 'images/1.jpg', width : 1, height : 1 }
+        //     ]
+        // });
     }
 
     openLightbox(event, obj) {

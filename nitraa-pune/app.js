@@ -9,6 +9,7 @@ var adminModeratorCRUDRouter = require('./routes/admin-moderator-CRUD/index');
 var signinUserRouter = require('./routes/userSignin/index');
 var signupUserRouter = require('./routes/userSignup/index');
 var loginModeratorRouter = require('./routes/moderator-auth/index');
+var moderatorGallery = require('./routes/moderator-utility/gallery/index');
 
 var app = express();
 
@@ -29,6 +30,7 @@ app.use('/admin-moderator-crud', adminModeratorCRUDRouter);
 app.use('/signin-user', signinUserRouter);
 app.use('/signup-user', signupUserRouter);
 app.use('/login-moderator', loginModeratorRouter);
+app.use('/moderator-gallery', moderatorGallery);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
