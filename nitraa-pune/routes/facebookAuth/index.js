@@ -32,7 +32,7 @@ passport.deserializeUser((ID,done)=>{
         if(error == null)
         {
             dbo = db.db("nitraa-pune");
-            dbo.collection("users").findOne({"idToken" : ID}).toArray(function (err, result){
+            dbo.collection("users").findOne({"idToken" : ID},function (err, result){
                 done(null, result);
             });
         }
@@ -61,7 +61,7 @@ routes.get('/callback', passport.authenticate('facebook',{ scope: ['email'] }), 
             if(error == null)
             {
                 dbo = db.db("nitraa-pune");
-                dbo.collection("users").findOne({"email" : req.user.emails[0].value}).toArray(function (err, result){
+                dbo.collection("users").findOne({"email" : req.user.emails[0].value},function (err, result){
                     if(err)
                     {
                         db.close();
