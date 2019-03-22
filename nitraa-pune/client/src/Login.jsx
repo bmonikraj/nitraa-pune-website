@@ -192,7 +192,7 @@ class Login extends React.Component {
                         </Col>
                     </Row>
                 </Form>
-                <Sweetalert danger confirmBtnText="I Understand" confirmBtnBsStyle="danger" title="Authentication Error" show={this.state.loginAlertShow} onConfirm={this.handleLoginAlertClose}>
+                <Sweetalert danger confirmBtnText="I Understand" confirmBtnBsStyle="primary" title="Authentication Error" show={this.state.loginAlertShow} onConfirm={this.handleLoginAlertClose}>
                     {this.state.loginAlertText}
                 </Sweetalert>
                 <Footer />
