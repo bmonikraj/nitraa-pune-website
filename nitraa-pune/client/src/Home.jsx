@@ -24,7 +24,7 @@ class Home extends React.Component {
                     <Carousel controls={false} indicators={false} interval={2000} style={{ paddingTop: window.innerHeight*0.15 }}>
                         <Carousel.Item>
                             <ImageResizable
-                                src={process.env.PUBLIC_URL + 'images/1.jpg'}
+                                src={process.env.PUBLIC_URL + 'images/carousel/1.jpg'}
                                 alt="First slide"
                                 height={non_mobile_dim.height}
                                 width={non_mobile_dim.width}
@@ -37,7 +37,7 @@ class Home extends React.Component {
                         </Carousel.Item>
                         <Carousel.Item>
                             <ImageResizable
-                                src={process.env.PUBLIC_URL + 'images/2.jpg'}
+                                src={process.env.PUBLIC_URL + 'images/carousel/2.jpg'}
                                 alt="First slide"
                                 height={non_mobile_dim.height}
                                 width={non_mobile_dim.width}
@@ -51,7 +51,7 @@ class Home extends React.Component {
                         </Carousel.Item>
                         <Carousel.Item>
                             <ImageResizable
-                                src={process.env.PUBLIC_URL + 'images/3.jpg'}
+                                src={process.env.PUBLIC_URL + 'images/carousel/3.jpg'}
                                 alt="First slide"
                                 height={non_mobile_dim.height}
                                 width={non_mobile_dim.width}
@@ -70,7 +70,7 @@ class Home extends React.Component {
                         <Carousel.Item>
                             <img
                                 className="d-block w-100"
-                                src={process.env.PUBLIC_URL + 'images/1.jpg'}
+                                src={process.env.PUBLIC_URL + 'images/carousel/1.jpg'}
                                 alt="First slide"
                             />
                             <Carousel.Caption>
@@ -81,7 +81,7 @@ class Home extends React.Component {
                         <Carousel.Item>
                             <img
                                 className="d-block w-100"
-                                src={process.env.PUBLIC_URL + 'images/2.jpg'}
+                                src={process.env.PUBLIC_URL + 'images/carousel/2.jpg'}
                                 alt="Third slide"
                             />
 
@@ -93,7 +93,7 @@ class Home extends React.Component {
                         <Carousel.Item>
                             <img
                                 className="d-block w-100"
-                                src={process.env.PUBLIC_URL + 'images/3.jpg'}
+                                src={process.env.PUBLIC_URL + 'images/carousel/3.jpg'}
                                 alt="Third slide"
                             />
 
