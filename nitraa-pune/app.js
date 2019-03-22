@@ -3,12 +3,18 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var passport = require('passport');
+
 
 var loginAdminRouter = require('./routes/login-admin/index');
 var adminModeratorCRUDRouter = require('./routes/admin-moderator-CRUD/index');
 var signinUserRouter = require('./routes/userSignin/index');
 var signupUserRouter = require('./routes/userSignup/index');
 var loginModeratorRouter = require('./routes/moderator-auth/index');
+var facebookLogin = require('./routes/facebookAuth/index');
+var googleLogin = require('./routes/googleAuth/index');
+var linkedinLogin = require('./routes/linkedinAuth/index');
+
 
 var app = express();
 
@@ -23,12 +29,17 @@ app.use(express.urlencoded({
 }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(passport.initialize());
+//app.use(passport.session());
 
 app.use('/login-admin', loginAdminRouter);
 app.use('/admin-moderator-crud', adminModeratorCRUDRouter);
 app.use('/signin-user', signinUserRouter);
 app.use('/signup-user', signupUserRouter);
 app.use('/login-moderator', loginModeratorRouter);
+app.use('/auth/facebook', facebookLogin);
+app.use('/auth/google', googleLogin);
+app.use('/auth/linkedin', linkedinLogin);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -45,5 +56,15 @@ app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+// passport.use(new FacebookStrategy({
+//   clientID: configFB.facebookAuth.clientID,
+//   clientSecret: configFB.facebookAuth.clientSecret,
+//   callbackURL: configFB.facebookAuth.callbackURL
+// },
+// function(accessToken, refreshToken, profile, done) {
+  
+// }
+// ));
 
 module.exports = app;
