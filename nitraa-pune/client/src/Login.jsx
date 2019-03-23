@@ -183,10 +183,10 @@ class Login extends React.Component {
                             <Form.Label style={formLabelStyle}>One click login with</Form.Label>
                             <Row>
                                 <Col>
-                                    <SocialIcon url="https://facebook.com" network="facebook" bgColor="#ffffff" />
+                                    <SocialIcon url="http://localhost:3001/auth/facebook" network="facebook" bgColor="#ffffff" />
                                 </Col>
                                 <Col>
-                                    <SocialIcon url="https://linkedin.com" network="linkedin" bgColor="#ffffff" />
+                                    <SocialIcon url="http://localhost:3001/auth/linkedin" network="linkedin" bgColor="#ffffff" />
                                 </Col>
                             </Row>
                         </Col>
