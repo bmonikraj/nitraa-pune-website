@@ -14,6 +14,7 @@ import axios from 'axios';
 import Header from './Components/Header';
 import Footer from './Components/Footer';
 import $ from 'jquery';
+import * as d3 from 'd3';
 // import IMGSlider from 'react-image-slider';
 // import '../node_modules/react-image-slider/lib/image-slider.css';
 
@@ -25,7 +26,8 @@ class ModeratorDashboard extends React.Component{
             ModeratorAlertText : "",
             ModeratorAlertShow : false,
             ModeratorAlertStyle : "danger",
-            galleryImages : []
+            galleryImages : [],
+            r : 10
         }
 
         this.handleModeratorAlertClose = this.handleModeratorAlertClose.bind(this);
@@ -145,6 +147,8 @@ class ModeratorDashboard extends React.Component{
                 })
             }
         })
+
+        
     }    
 
     render(){
@@ -199,6 +203,7 @@ class ModeratorDashboard extends React.Component{
                             </Tab>
                             {/* If Something new comes up for Moderator- Carousel to be done by the Developer */}
                         </Tabs>
+                        
                     </div>
                 <Footer/>
                 <Sweetalert type={this.state.ModeratorAlertStyle} confirmBtnText="I Understand" confirmBtnBsStyle="primary" title="Moderator Utility" show={this.state.ModeratorAlertShow} onConfirm={this.handleModeratorAlertClose}>
