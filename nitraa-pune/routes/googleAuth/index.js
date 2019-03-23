@@ -12,6 +12,7 @@ var ObjectID = require('mongodb').ObjectID;
 var bodyParser = require('body-parser');
 var app = express();
 var urlMongo = require('../constant/mongodbAddress/index');
+//var urlMongo = require('../constant/mongo/index');
 var jwt = require('jsonwebtoken');
 var jwt_salt = require('../constant/jwt/index');
 
