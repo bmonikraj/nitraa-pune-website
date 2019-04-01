@@ -10,6 +10,7 @@ import Sweetalert from 'react-bootstrap-sweetalert';
 import axios from 'axios';
 import Header from './Components/Header';
 import Footer from './Components/Footer';
+import queryString from 'query-string';
 
 class Login extends React.Component {
 
@@ -21,6 +22,18 @@ class Login extends React.Component {
         this.state = {
             loginAlertShow: false,
             loginAlertText: ""
+        }
+    }
+
+    componentDidMount()
+    {
+        var params = queryString.parse(this.props.location.search);
+        if(params.message)
+        {
+            this.setState({
+                loginAlertShow: true,
+                loginAlertText: params.message
+            });
         }
     }
 
@@ -184,6 +197,9 @@ class Login extends React.Component {
                             <Row>
                                 <Col>
                                     <SocialIcon url="http://localhost:3001/auth/facebook" network="facebook" bgColor="#ffffff" />
+                                </Col>
+                                <Col>
+                                    <SocialIcon url="http://localhost:3001/auth/google" network="google" bgColor="#ffffff" />
                                 </Col>
                                 <Col>
                                     <SocialIcon url="http://localhost:3001/auth/linkedin" network="linkedin" bgColor="#ffffff" />

@@ -27,7 +27,7 @@ class Header extends React.Component {
                 this.setState({profileURL : '/moderator-dashboard'});
             }
             if(localStorage.getItem('profile')=='user'){
-                this.setState({profileURL : '/user-dashboard'});
+                this.setState({profileURL : '/profile'});
                 this.setState({profileTab : "Profile"});
             }
         }
