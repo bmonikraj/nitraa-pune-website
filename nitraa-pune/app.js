@@ -14,6 +14,8 @@ var loginModeratorRouter = require('./routes/moderator-auth/index');
 var facebookLogin = require('./routes/facebookAuth/index');
 var googleLogin = require('./routes/googleAuth/index');
 var linkedinLogin = require('./routes/linkedinAuth/index');
+var loginCheck = require('./routes/login_check/index');
+var profile = require('./routes/profile/index');
 
 var moderatorGallery = require('./routes/moderator-utility/gallery/index');
 
@@ -42,6 +44,8 @@ app.use('/auth/facebook', facebookLogin);
 app.use('/auth/google', googleLogin);
 app.use('/auth/linkedin', linkedinLogin);
 app.use('/moderator-gallery', moderatorGallery);
+app.use('/loginCheck', loginCheck);
+app.use('/profile', profile);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
