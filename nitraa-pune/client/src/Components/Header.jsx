@@ -64,6 +64,7 @@ class Header extends React.Component {
 
         function logoutFunc(){
             localStorage.removeItem('authtoken');
+            localStorage.removeItem('profile');
             window.open("/", "_self");
         }
 

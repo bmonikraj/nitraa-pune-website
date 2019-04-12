@@ -29,7 +29,7 @@ const authcheck = (req, res, next) => {
         mongo.connect(urlMongo, {useNewUrlParser : true}, function(error, db){
             if(error == null)
             {
-                dbo = db.db("nitraa-pune");
+                dbo = db.db("nitraapune");
                 dbo.collection("users").findOne({"_id" : ObjectID(user_id)},function (err, result){
                     if(err)
                     {

@@ -22,7 +22,7 @@ var getHash = (password, email) => {
 router.post('/', function (req, res, next) {
     mongo.connect(urlMongo, function (err, db) {
         if (err == null) {
-            var dbn = db.db("nitraa-pune");
+            var dbn = db.db("nitraapune");
             dbn.collection("users").findOne({
                 "email": req.body.email,
                 "password": getHash(req.body.password, req.body.email)

@@ -32,7 +32,7 @@ router.get('/read', function (req, res, next) {
             mongo.connect(urlMongo, {useNewUrlParser : true}, function(err, db){
                 if(err == null)
                 {
-                    dbo = db.db("nitraa-pune");
+                    dbo = db.db("nitraapune");
                     dbo.collection("users").findOne({_id: ObjectID(uid)}, function(err1, res1){
                         if(err1)
                         {
@@ -76,7 +76,7 @@ router.put('/update', function(req, res, next){
             mongo.connect(urlMongo, {useNewUrlParser : true}, function(err, db){
                 if(err == null)
                 {
-                    dbo = db.db("nitraa-pune");
+                    dbo = db.db("nitraapune");
                     dbo.collection("users").updateOne({_id: ObjectID(uid)},
                     {$set: {
                         name: req.body.name,
@@ -126,7 +126,7 @@ router.post('/profilePicUpload', upload.single('ImageFile'), function (req, res,
         //console.log(uid);
         mongo.connect(urlMongo, {useNewUrlParser : true}, function (err_mdbcon, db) {
             if (err_mdbcon == null) {
-                dbo = db.db('nitraa-pune');
+                dbo = db.db('nitraapune');
                 dbo.collection('users').findOne({_id : ObjectID(uid)},function (err1, res1) {
                     console.log(res1);
                     if (err1) {
@@ -226,7 +226,7 @@ router.get('/ProfilePicRemove', function(req, res, next){
         var uid = jwt.verify(jwt_token, jwt_salt).tid;
         mongo.connect(urlMongo, {useNewUrlParser : true}, function (err_mdbcon, db) {
             if (err_mdbcon == null) {
-                dbo = db.db('nitraa-pune');
+                dbo = db.db('nitraapune');
                 dbo.collection('users').findOne({_id : ObjectID(uid)},function (err1, res1) {
                     if (err1) {
                         db.close();
