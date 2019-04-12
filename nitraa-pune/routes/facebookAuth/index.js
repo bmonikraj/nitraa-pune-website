@@ -8,12 +8,11 @@ var passport = require('passport')
 var express = require('express');
 var path = require('path');
 var mongo = require('mongodb').MongoClient;
+var ObjectID = require('mongodb').ObjectID;
 var bodyParser = require('body-parser');
 var app = express();
 var urlMongo = require('../constant/mongodbAddress/index');
 //var urlMongo = require('../constant/mongo/index');
-var jwt = require('jsonwebtoken');
-var jwt_salt = require('../constant/jwt/index');
 
 var config = require("../constant/app_credentials/index");
 
@@ -29,7 +28,7 @@ passport.serializeUser((user,done)=>{
 });
 
 passport.deserializeUser((ID,done)=>{
-    mongo.connect(function(error, db){
+    mongo.connect(urlMongo, {useNewUrlParser : true}, function(error, db){
         if(error == null)
         {
             dbo = db.db("nitraapune");
@@ -55,7 +54,6 @@ routes.get('/', passport.authenticate('facebook'));
 
 routes.get('/callback', passport.authenticate('facebook',{ scope: ['email'] }), function(req, res, next){
     //console.log(req.user);
-    //console.log("\nHiii");
     if(req.user.emails[0].value)
     {
         mongo.connect(urlMongo, {useNewUrlParser : true}, function(error, db){
@@ -66,31 +64,36 @@ routes.get('/callback', passport.authenticate('facebook',{ scope: ['email'] }), 
                     if(err)
                     {
                         db.close();
-                        res.json({status: "fail", message : "Login Failed!"});
+                        res.redirect("http://localhost:3000/login?status=fail&message=Login%20Failed");
                     }
                     else
                     {
                         if(result == null)
                         {
-                            dbo.collection("users").insertMany([{"name": req.user.displayName, "email": req.user.emails[0].value, "type": "linkedin", "idToken": req.user.id}], (err1,result1) => {
+                            dbo.collection("users").insertMany([{"name": req.user.name.givenName, "email": req.user.emails[0].value, "type": "facebook", "idToken": req.user.id, "address": "","phone": "", "father": "", "mother" : "", "spouse_name": "", "dob" : "", "children": [],
+                            "siblings": [],"permanent_adr": "", "hobbies": [], "cover_pic_ext": null, "log_timestamp": ""}], (err1,result1) => {
                                 if (err1) {
                                     db.close();
-                                    res.json({ status: "fail", message: "Login Failed!" });
+                                    res.redirect("http://localhost:3000/login?status=fail&message=Login%20Failed");
                                 }
                                 else
                                 {
-                                    db.close();
-                                    jwt_token = jwt.sign({tid : result1.insertedIds["0"]}, jwt_salt);
-                                    if(jwt_token)
-                                    {
-                                        res.set({"authtoken" : jwt_token});
-                                        res.json({status : "success", message: "Login Successful!"});
-                                    }
-                                    else
-                                    {
-                                        db.close();
-                                        res.json({status : "fail", message : "Login Failed!"});
-                                    }
+                                    dbo.collection("users").updateOne({_id: ObjectID(result1.insertedIds["0"])}, {
+                                        $set: {
+                                            log_timestamp : Date.now()
+                                        }
+                                    }, function(err2, res2){
+                                        if(!err2)
+                                        {
+                                            db.close();
+                                            res.redirect("http://localhost:3000/loginCheck?id="+result1.insertedIds["0"].toString());
+                                        }
+                                        else
+                                        {
+                                            db.close();
+                                            res.redirect("http://localhost:3000/login?status=fail&message=Error%20occured%20while%20logging%20in");
+                                        }
+                                    });
                                 }
                             });
                         }
@@ -98,23 +101,28 @@ routes.get('/callback', passport.authenticate('facebook',{ scope: ['email'] }), 
                         {
                             if(result.type === "facebook")
                             {
-                                db.close();
-                                jwt_token = jwt.sign({tid : result._id}, jwt_salt);
-                                if(jwt_token)
-                                {
-                                    res.set({"authtoken" : jwt_token});
-                                    res.json({status : "success", message: "Login Successful!"});
-                                }
-                                else
-                                {
-                                    db.close();
-                                    res.json({status : "fail", message : "Login Failed!"});
-                                }
+                                dbo.collection("users").updateOne({_id: ObjectID(result._id)}, {
+                                    $set:
+                                    {
+                                        log_timestamp: Date.now()
+                                    }
+                                }, function(err2, res2){
+                                    if(!err2)
+                                    {
+                                        db.close();
+                                        res.redirect("http://localhost:3000/loginCheck?id="+result._id.toString());
+                                    }
+                                    else
+                                    {
+                                        db.close();
+                                        res.redirect("http://localhost:3000/login?status=fail&message=Error%20occured%20while%20logging%20in");
+                                    }
+                                });
                             }
                             else
                             {
                                 db.close();
-                                res.json({status: "fail", message: "Email address already registered in an existing account!"});
+                                res.redirect("http://localhost:3000/login?status=fail&message=Email%20address%20already%20registered%20in%20an%20existing%20account");
                             }
                         }
                     }
@@ -124,7 +132,8 @@ routes.get('/callback', passport.authenticate('facebook',{ scope: ['email'] }), 
     }
     else
     {
-        res.json({status: "fail", message: "Account does not have an email address."});
+        //res.json({status: "fail", message: "Account does not have an email address."});
+        res.redirect("http://localhost:3000/login?status=fail&message=Account%20does%20not%20have%20an%20email%20address");
     }
 });
 

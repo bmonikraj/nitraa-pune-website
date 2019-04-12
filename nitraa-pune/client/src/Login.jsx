@@ -10,6 +10,7 @@ import Sweetalert from 'react-bootstrap-sweetalert';
 import axios from 'axios';
 import Header from './Components/Header';
 import Footer from './Components/Footer';
+import queryString from 'query-string';
 
 class Login extends React.Component {
 
@@ -21,6 +22,18 @@ class Login extends React.Component {
         this.state = {
             loginAlertShow: false,
             loginAlertText: ""
+        }
+    }
+
+    componentDidMount()
+    {
+        var params = queryString.parse(this.props.location.search);
+        if(params.message)
+        {
+            this.setState({
+                loginAlertShow: true,
+                loginAlertText: params.message
+            });
         }
     }
 

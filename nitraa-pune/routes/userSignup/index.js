@@ -27,6 +27,16 @@ router.post('/', function (req, res, next) {
         "email": e_mail,
         "password": getHash(req.body.password, req.body.email),
         "phone": req.body.phone,
+        "type": "custom",
+        "date": "",
+        "father" : "",
+        "mother" : "",
+        "spouse_name": "",
+        "permanent_adr": "",
+        "children":[],
+        "siblings":[],
+        "hobbies":[],
+        "cover_pic_ext": null
     }
     mongo.connect(urlMongo, function (err, db) {
         if (err == null) {
