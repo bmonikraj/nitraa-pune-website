@@ -40,7 +40,7 @@ router.post('/', function (req, res, next) {
     }
     mongo.connect(urlMongo, function (err, db) {
         if (err == null) {
-            var dbn = db.db("nitraa-pune");
+            var dbn = db.db("nitraapune");
             dbn.collection("users").insertOne(data, (err, collection) => {
                 if (err) {
                     db.close();
