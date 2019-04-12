@@ -6,6 +6,7 @@ import Login from './Login';
 import AdminDashboard from './AdminDashboard';
 import Gallery from './Gallery';
 import ModeratorDashboard from './ModeratorDashboard';
+import Register from './Register';
 
 class App extends React.Component{
     render(){
@@ -13,6 +14,7 @@ class App extends React.Component{
             <React.Fragment>
                 <Route exact={true} path='/' component={Home} />
                 <Route exact={true} path='/login' component={Login} />
+                <Route exact={true} path='/register' component={Register} />
                 <Route exact={true} path='/admin-dashboard' component={AdminDashboard} />
                 <Route exact={true} path='/gallery' component={Gallery} />
                 <Route exact={true} path='/moderator-dashboard' component={ModeratorDashboard} />

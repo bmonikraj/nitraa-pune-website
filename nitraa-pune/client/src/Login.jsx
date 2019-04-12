@@ -122,7 +122,7 @@ class Login extends React.Component {
 
         }
         else {
-
+            window.open("/register","_self")
         }
     }
 
@@ -184,6 +184,9 @@ class Login extends React.Component {
                             <Row>
                                 <Col>
                                     <SocialIcon url="http://localhost:3001/auth/facebook" network="facebook" bgColor="#ffffff" />
+                                </Col>
+                                <Col>
+                                    <SocialIcon url="http://localhost:3001/auth/google" network="google" bgColor="#ffffff" />
                                 </Col>
                                 <Col>
                                     <SocialIcon url="http://localhost:3001/auth/linkedin" network="linkedin" bgColor="#ffffff" />

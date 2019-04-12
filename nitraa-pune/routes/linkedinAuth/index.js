@@ -32,7 +32,7 @@ passport.deserializeUser((ID,done)=>{
     mongo.connect(function(error, db){
         if(error == null)
         {
-            dbo = db.db("nitraa-pune");
+            dbo = db.db("nitraapune");
             dbo.collection("users").findOne({"idToken" : ID},function (err, result){
                 done(null, result);
             });
@@ -60,7 +60,7 @@ routes.get('/callback', passport.authenticate('linkedin'), function(req, res, ne
         mongo.connect(urlMongo, {useNewUrlParser : true}, function(error, db){
             if(error == null)
             {
-                dbo = db.db("nitraa-pune");
+                dbo = db.db("nitraapune");
                 dbo.collection("users").findOne({"email" : req.user.emails[0].value},function (err, result){
                     if(err)
                     {
