@@ -14,12 +14,12 @@ app.use(bodyParser.urlencoded({
 router = express.Router();
 
 router.get('/', function (req, res, next) {
-    
-    jwt_token = req.get('authtoken');  
-    if (jwt_token && jwt.verify(jwt_token, jwt_salt).tid){ 
+
+    jwt_token = req.get('authtoken');
+    if (jwt_token && jwt.verify(jwt_token, jwt_salt).tid){
         mongo.connect(mongourl, function (err_mdbcon, db) {
             if (err_mdbcon == null) {
-                dbo = db.db('nitraapune'); 
+                dbo = db.db('nitraapune');
                 dbo.collection('moderators').find({}, { fields: { "_id": 0 } }).toArray(function (err_arr, array_res) {
                     if (err_arr) {
                         db.close();

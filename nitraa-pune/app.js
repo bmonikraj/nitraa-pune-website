@@ -16,7 +16,9 @@ var googleLogin = require('./routes/googleAuth/index');
 var linkedinLogin = require('./routes/linkedinAuth/index');
 var loginCheck = require('./routes/login_check/index');
 var profile = require('./routes/profile/index');
-
+var blogDetails = require('./routes/blogDetails/index');
+var eventDetails = require('./routes/eventDetails/index');
+var jobDetails = require('./routes/jobDetails/index');
 var moderatorGallery = require('./routes/moderator-utility/gallery/index');
 
 var app = express();
@@ -46,6 +48,9 @@ app.use('/auth/linkedin', linkedinLogin);
 app.use('/moderator-gallery', moderatorGallery);
 app.use('/loginCheck', loginCheck);
 app.use('/profile', profile);
+app.use('/events', eventDetails);
+app.use('/blogs', blogDetails);
+app.use('/jobs', jobDetails);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -69,7 +74,7 @@ app.use(function (err, req, res, next) {
 //   callbackURL: configFB.facebookAuth.callbackURL
 // },
 // function(accessToken, refreshToken, profile, done) {
-  
+
 // }
 // ));
 

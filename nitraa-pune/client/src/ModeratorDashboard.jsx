@@ -148,16 +148,76 @@ class ModeratorDashboard extends React.Component{
             }
         })
 
-        
-    }    
 
+    }
+
+    addEvent(){
+      let eventName = $("#event-name").val();
+      let eventDate = $("#event-date").val();
+      let eventTime = $("event-time").val();
+      let eventLocation = $("#event-location").val();
+      let eventDescription = $("#event-description").val();
+      let eventExtLinks = $("#event-external-links").val();
+      let eventRegFees = $("#event-registration-fees").val();
+      let eventCreatedby = $("#event-created-by").val();
+      let eventOnBehalfof = $("#event-on-behalf-of").val();
+      axios({
+        method: "POST",
+        url: '/events',
+        headers: {
+          authtoken: localStorage.getItem('authtoken')
+        },
+        data: {
+          eventName: eventName,
+          eventDate: eventDate,
+          eventTime: eventTime,
+          eventLocation: eventLocation,
+          eventDescription: eventDescription,
+          eventExtLinks: eventExtLinks,
+          eventRegFees: eventRegFees,
+          eventCreatedby: eventCreatedby,
+          eventOnBehalfof: eventOnBehalfof
+        }
+      }).then((response) => {
+        console.log(response);
+        if(response.data.status === "success"){
+          alert("Event details added successfully!!");
+        }
+      }).catch((error) => {
+        console.log(error);
+      })
+    }
+
+    addBlog(){
+      let blogTitle = $("#blog-title").val();
+      let blogDescription = $("#blog-posted-by").val();
+      let blogPostedby = $("blog-description").val();
+      axios({
+        method: "POST",
+        url: '/blogs',
+        headers: {
+          authtoken: localStorage.getItem('authtoken')
+        },
+        data: {
+          blogTitle: blogTitle,
+          blogDescription: blogDescription,
+          blogPostedby: blogPostedby
+        }
+      }).then((response) => {
+        console.log(response);
+        if(response.data.status === "success"){
+          alert("Blog details added successfully!!");
+        }
+      }).catch((error) => {
+        console.log(error);
+      })
+    }
     render(){
-    
+
         const styleTableDiv = {
             marginTop : '15vh',
             marginBottom : '15vh',
             background : "#eeeeee"
-
         }
 
         return(
@@ -172,7 +232,7 @@ class ModeratorDashboard extends React.Component{
                                             <Col md={2}>
                                                 <Form.Control type="file" id="gallery-file"></Form.Control>
                                             </Col>
-                                            <Col  md={2}>
+                                            <Col md={2}>
                                                 <Form.Label id="gallery-filename" style={{border:"solid 1px blue"}}></Form.Label>
                                             </Col>
                                             <Col md={7}>
@@ -202,15 +262,91 @@ class ModeratorDashboard extends React.Component{
                                 </div>
                             </Tab>
                             {/* If Something new comes up for Moderator- Carousel to be done by the Developer */}
+                            <Tab eventKey = "event" title = "EVENT">
+                                <div style={{padding:"2vw"}}>
+                                    <Form>
+                                        <Row style ={{padding: "1rem"}}>
+                                          <Col>
+                                            <Form.Control type="text" id="event-name" placeholder = "Name" required></Form.Control>
+                                          </Col>
+                                          <Col>
+                                            <Form.Control type="date" id = "event-date" placeholder = "Date" required></Form.Control>
+                                          </Col>
+                                          <Col>
+                                            <Form.Control type = "time" id = "event-time" placeholder = "hrs:mins" required></Form.Control>
+                                          </Col>
+                                          <Col>
+                                            <Form.Control type = "text" id = "event-location" placeholder = "Location" required></Form.Control>
+                                          </Col>
+                                        </Row>
+
+                                        <Row style ={{padding: "1rem", margin: "0"}}>
+                                            <Form.Control as = "textarea" rows = "3" type ="text" id = "event-description" placeholder = "Description" required></Form.Control>
+                                        </Row>
+
+                                        <Row style ={{padding: "1rem"}}>
+                                          <Col>
+                                            <Form.Control type = "text" id = "event-external-links" placeholder = "External Links" required></Form.Control>
+                                          </Col>
+
+                                          <Col>
+                                            <Form.Control type = "text" id = "event-registration-fees" placeholder = "Registration Fees"></Form.Control>
+                                          </Col>
+                                        </Row>
+
+                                        <Row style ={{padding: "1rem"}}>
+                                          <Col>
+                                            <Form.Control type = "text" id = "event-created-by" placeholder = "Created By" required></Form.Control>
+                                          </Col>
+
+                                          <Col>
+                                            <Form.Control type = "text" id = "event-on-behalf-of" placeholder = "On Behalf of" required></Form.Control>
+                                          </Col>
+
+                                          <Col>
+                                            <Form.Control type = "file" id = "event-image" required></Form.Control>
+                                          </Col>
+                                        </Row>
+
+                                        <Row style = {{padding: "1rem", margin: "0"}}>
+                                          <Button variant = "primary" onClick = {this.addEvent.bind(this)}>Submit</Button>
+                                        </Row>
+                                    </Form>
+                                </div>
+                                <hr/>
+                            </Tab>
+                            <Tab eventKey = "blog" title = "BLOG">
+                                <div style={{padding:"2vw"}}>
+                                  <div style ={{padding: "1rem", margin: "0"}}>
+                                    <Form.Control type = "file" id = "blog-image" required></Form.Control>
+                                  </div>
+
+                                  <Row style = {{padding: "1rem"}}>
+                                    <Col>
+                                      <Form.Control type = "text" id = "blog-title" placeholder = "Title" required></Form.Control>
+                                    </Col>
+                                    <Col>
+                                      <Form.Control type = "text" id  = "blog-posted-by" placeholder = "Posted by" required></Form.Control>
+                                    </Col>
+                                  </Row>
+
+                                  <Row style ={{padding: "1rem", margin: "0"}}>
+                                    <Form.Control as = "textarea" rows = "5" id = "blog-description" placeholder = "Description"></Form.Control>
+                                  </Row>
+
+                                  <Row style = {{padding: "1rem", margin: "0"}}>
+                                    <Button variant = "primary" onClick = {this.addBlog.bind(this)}>Submit</Button>
+                                  </Row>
+                                </div>
+                            </Tab>
                         </Tabs>
-                        
                     </div>
                 <Footer/>
                 <Sweetalert type={this.state.ModeratorAlertStyle} confirmBtnText="I Understand" confirmBtnBsStyle="primary" title="Moderator Utility" show={this.state.ModeratorAlertShow} onConfirm={this.handleModeratorAlertClose}>
                     {this.state.ModeratorAlertText}
                 </Sweetalert>
             </Container>
-            
+
         )
     }
 }
