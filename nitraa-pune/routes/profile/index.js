@@ -271,7 +271,7 @@ router.get('/ProfilePicRemove', function(req, res, next){
                                         }
                                     });
                                 }
-                            });       
+                            });
                         }
                     }
                 })

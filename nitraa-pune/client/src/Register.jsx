@@ -40,7 +40,7 @@ class Register extends React.Component {
     handleRegister(event) {
         console.log(event.target);
         if (event.target.value == 'register' && this.password.value === this.cnfpassword.value) {
-            
+
                 var _self_parent = this;
                 axios({
                     method: 'post',
@@ -57,7 +57,7 @@ class Register extends React.Component {
 
                             _self_parent.setState({ RegisterAlertText: response.data.message });
                             _self_parent.handleRegisterAlertOpen();
-                            
+
                         }
                         else {
                             _self_parent.setState({ RegisterAlertText: response.data.message });
@@ -67,7 +67,7 @@ class Register extends React.Component {
                     .catch(function (error) {
                         console.log(error);
                     });
-            
+
         }
         else{
             _self_parent.setState({ RegisterAlertText: "Password is not matching confirm password" });
@@ -78,7 +78,7 @@ class Register extends React.Component {
 
     render() {
         const formStyle = {
-            marginTop: "23vh", 
+            marginTop: "23vh",
             marginBottom:"23vh"
         }
         const formLabelStyle = {

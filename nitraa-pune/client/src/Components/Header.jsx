@@ -36,27 +36,27 @@ class Header extends React.Component {
     render(){
 
         const itemStyle = {
-            display:"inline-flex", 
+            display:"inline-flex",
             verticleAlign:"middle",
             fontWeight: "bold",
         }
 
         const itemStyleLogin = {
-            display:"inline-flex", 
+            display:"inline-flex",
             verticleAlign:"middle",
             fontWeight: "bold",
             display : localStorage.getItem('authtoken')?"none":"block"
         }
 
         const itemStyleProfile = {
-            display:"inline-flex", 
+            display:"inline-flex",
             verticleAlign:"middle",
             fontWeight: "bold",
             display : localStorage.getItem('authtoken')?"block":"none"
         }
 
         const itemStyleLogout = {
-            display:"inline-flex", 
+            display:"inline-flex",
             verticleAlign:"middle",
             fontWeight: "bold",
             display : localStorage.getItem('authtoken')?"block":"none"
@@ -70,7 +70,7 @@ class Header extends React.Component {
 
         return (
                 <Container>
-                    <Navbar collapseOnSelect expand="md" bg="light" fixed="top">                    
+                    <Navbar collapseOnSelect expand="md" bg="light" fixed="top">
                         <Navbar.Brand href="/">
                             <MediaQuery query="(min-device-width : 768px)">
                                 <img
@@ -114,11 +114,11 @@ class Header extends React.Component {
                                 <MaterialIcons icon="photo"/>&nbsp;Gallery
                             </Nav.Link>
                             <NavDropdown title="Initiatives" id="collasible-nav-dropdown" style={itemStyle}>
-                                <NavDropdown.Item href="#action/3.1" style={itemStyle}>
+                                <NavDropdown.Item href="/events" style={itemStyle}>
                                     <MaterialIcons icon="event"/>&nbsp;Events
                                 </NavDropdown.Item>
                                 <NavDropdown.Divider />
-                                <NavDropdown.Item href="#action/3.2" style={itemStyle}>
+                                <NavDropdown.Item href="/jobs" style={itemStyle}>
                                     <MaterialIcons icon="school"/>&nbsp;Careers
                                 </NavDropdown.Item>
                                 <NavDropdown.Divider />
