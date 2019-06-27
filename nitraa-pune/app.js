@@ -3,7 +3,6 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-var passport = require('passport');
 
 
 var loginAdminRouter = require('./routes/login-admin/index');
@@ -20,6 +19,7 @@ var blogDetails = require('./routes/blogDetails/index');
 var eventDetails = require('./routes/eventDetails/index');
 var jobDetails = require('./routes/jobDetails/index');
 var moderatorGallery = require('./routes/moderator-utility/gallery/index');
+var eventRegistration = require('./routes/eventRegistration/index');
 
 var app = express();
 
@@ -34,16 +34,18 @@ app.use(express.urlencoded({
 }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(passport.initialize());
-//app.use(passport.session());
+
+app.get('/*', function (req, res) {
+   res.sendFile(path.join(__dirname, 'build', 'index.html'));
+ });
 
 app.use('/login-admin', loginAdminRouter);
 app.use('/admin-moderator-crud', adminModeratorCRUDRouter);
 app.use('/signin-user', signinUserRouter);
 app.use('/signup-user', signupUserRouter);
 app.use('/login-moderator', loginModeratorRouter);
-app.use('/auth/facebook', facebookLogin);
-app.use('/auth/google', googleLogin);
+app.use('/facebookAuth', facebookLogin);
+app.use('/googleAuth', googleLogin);
 app.use('/auth/linkedin', linkedinLogin);
 app.use('/moderator-gallery', moderatorGallery);
 app.use('/loginCheck', loginCheck);
@@ -51,6 +53,7 @@ app.use('/profile', profile);
 app.use('/events', eventDetails);
 app.use('/blogs', blogDetails);
 app.use('/jobs', jobDetails);
+app.use('/event-reg', eventRegistration);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

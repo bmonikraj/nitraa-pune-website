@@ -10,9 +10,11 @@ import Sweetalert from 'react-bootstrap-sweetalert';
 import axios from 'axios';
 import Header from './Components/Header';
 import Footer from './Components/Footer';
+import GoogleLogin from 'react-google-login';
+import FacebookProvider, {Login} from 'react-facebook-sdk';
 import queryString from 'query-string';
 
-class Login extends React.Component {
+class LoginPage extends React.Component {
 
     constructor(props) {
         super(props);
@@ -139,6 +141,40 @@ class Login extends React.Component {
         }
     }
 
+    handleResponseFacebook(res){
+      console.log(res);
+    }
+    responseGoogle(res){
+      if(res.error || !res.profileObj){
+        this.setState({ loginAlertText: "Sorry! Unexpected Error." });
+        this.handleLoginAlertOpen();
+      }
+      else{
+        var _self = this;
+        axios({
+          method: 'POST',
+          url: '/googleAuth',
+          data:{
+            profileObj: res.profileObj
+          }
+        }).then(response =>{
+            // console.log(response);
+            if(response.data.status === 'success'){
+              localStorage.setItem('authtoken', response.headers.authtoken);
+              localStorage.setItem('profile', 'user');
+              window.open("/", "_self");
+            }
+            else{
+              _self.setState({ loginAlertText: response.data.message });
+              _self.handleLoginAlertOpen();
+            }
+        }).catch(error=>{
+          _self.setState({ loginAlertText: "Sorry! Unexpected Error." });
+          _self.handleLoginAlertOpen();
+        });
+      }
+    }
+
     render() {
         const formStyle = {
             marginTop: "23vh"
@@ -179,10 +215,12 @@ class Login extends React.Component {
                                     </Button>
                                 </Col>
                                 <Col xs={{ span: 2, offset: 2 }}>
+                                </Col>
+                                {/*<Col xs={{ span: 2, offset: 2 }}>
                                     <Button variant="primary" value="recover" onClick={this.handleLogin}>
                                         Recover
                                     </Button>
-                                </Col>
+                                </Col>*/}
                                 <Col xs={{ span: 2, offset: 2 }}>
                                     <Button variant="primary" value="register" onClick={this.handleLogin}>
                                         Register
@@ -191,22 +229,39 @@ class Login extends React.Component {
                             </Row>
                         </Col>
                     </Row>
-                    <Row style={{ paddingTop: 20 }}>
+                    {/*<Row style={{ paddingTop: 20 }}>
                         <Col xs={12} md={{ span: 6, offset: 3 }}>
                             <Form.Label style={formLabelStyle}>One click login with</Form.Label>
                             <Row>
                                 <Col>
-                                    <SocialIcon url="http://localhost:3001/auth/facebook" network="facebook" bgColor="#ffffff" />
+                                  <FacebookProvider appId="1818911678412891">
+                                    <Login
+                                      scope="name,email,picture"
+                                      onResponse={this.handleResponseFacebook.bind(this)}
+                                      render={({ isLoading, isWorking, onClick }) => (
+                                        <SocialIcon onClick={onClick} network="facebook" bgColor="#ffffff" className="iconsSignin"/>
+                                      )}
+                                    />
+                                  </FacebookProvider>
                                 </Col>
                                 <Col>
-                                    <SocialIcon url="http://localhost:3001/auth/google" network="google" bgColor="#ffffff" />
+                                  <GoogleLogin
+                                    clientId="852876963227-2h0cv9040sjn5567bdh43ejrg364jt6p.apps.googleusercontent.com"
+                                    autoLoad={false}
+                                    render={renderProps => (
+                                        <SocialIcon onClick={renderProps.onClick} disabled={renderProps.disabled} network="google" bgColor="#ffffff" className="iconsSignin"/>
+                                    )}
+                                    onSuccess={this.responseGoogle.bind(this)} onFailure={this.responseGoogle.bind(this)}
+                                    cookiePolicy={'single_host_origin'}
+                                  />
+
                                 </Col>
                                 <Col>
                                     <SocialIcon url="http://localhost:3001/auth/linkedin" network="linkedin" bgColor="#ffffff" />
                                 </Col>
                             </Row>
                         </Col>
-                    </Row>
+                    </Row>*/}
                 </Form>
                 <Sweetalert danger confirmBtnText="I Understand" confirmBtnBsStyle="primary" title="Authentication Error" show={this.state.loginAlertShow} onConfirm={this.handleLoginAlertClose}>
                     {this.state.loginAlertText}
@@ -217,4 +272,4 @@ class Login extends React.Component {
     }
 }
 
-export default Login;
+export default LoginPage;

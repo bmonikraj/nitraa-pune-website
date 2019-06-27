@@ -21,71 +21,81 @@ router = express.Router();
 /*****************************************************Blog details upload Begins***************************************************************/
 router.post('/', upload.single('ImageFile'), function (req, res, next) {
   jwt_token = req.get('authtoken');
+  console.log(req.body);
   if (jwt_token && jwt.verify(jwt_token, jwt_salt).tid){
       var uid = jwt.verify(jwt_token, jwt_salt).tid;
-      mongo.connect(urlMongo, {useNewUrlParser : true}, function (err_mdbcon, db) {
-          if (err_mdbcon == null) {
-              dbo = db.db('nitraapune');
-              dbo.collection('moderators').findOne({ _id: ObjectID(uid)}, function (err_arr, res_auth){
-                console.log(res_auth);
-                if(err_arr){
-                  db.close();
-                  res.json({
-                    status: "failure",
-                    message: "Moderator authentication failed!"
-                  });
-                }
-                else{
-                  dbo.collection("blogs").insertOne({
-                    blogTitle: req.body.blogTitle,
-                    blogDescription: req.body.blogDescription,
-                    blogPostedby: req.body.blogPostedby
-                  }, (err1, res1) => {
-                    if(err1){
-                      db.close();
-                      res.json({
-                        status: 'failure',
-                        message: 'Error inserting data'
-                      });
-                    }
-                    else{
-                      if(res1.insertedId){
-                          var DID = res1.insertedId;
-                          var EXT = req.file.originalname.split(".");
-                          EXT = EXT[EXT.length-1];
-                          console.log(EXT);
-                          var fs = require('fs');
-                          fs.rename(req.file.path, "public/images/blogs/"+DID+"."+EXT, function(err_upload){
-                              if (err_upload){
-                                  res.json({ status: 'fail', message: 'Error while moving file' });
-                              }
-                              else{
-                                  dbo.collection('blogs').updateOne({_id : ObjectID(DID)}, {$set : {'blog_image_ext' : EXT}}, function(err_ext, res_ext){
-                                      if(err_ext){
-                                          db.close();
-                                          res.json({status : "fail", message : "Error in saving Extension of file"})
-                                      }
-                                      else{
-                                          db.close()
-                                          res.json({status : "success"});
-                                      }
-                                  })
-                              }
-                          });
+      if(req.file){
+        mongo.connect(urlMongo, {useNewUrlParser : true}, function (err_mdbcon, db) {
+            if (err_mdbcon == null) {
+                dbo = db.db('nitraapune');
+                dbo.collection('moderators').findOne({ _id: ObjectID(uid)}, function (err_arr, res_auth){
+                  console.log(res_auth);
+                  if(err_arr){
+                    db.close();
+                    res.json({
+                      status: "fail",
+                      message: "Moderator authentication failed!"
+                    });
+                  }
+                  else{
+                    dbo.collection("blogs").insertOne({
+                      blogTitle: req.body.blogTitle,
+                      blogDescription: req.body.blogDescription,
+                      blogPostedby: req.body.blogPostedby,
+                      blogPostedDate: (new Date()).toDateString()
+                    }, (err1, res1) => {
+                      if(err1){
+                        db.close();
+                        res.json({
+                          status: 'fail',
+                          message: 'Error inserting data'
+                        });
                       }
                       else{
-                        db.close();
-                        res.json({status: "failure", message:"Couldn't insert details"});
+                        if(res1.insertedId){
+                            var DID = res1.insertedId;
+                            var EXT = req.file.originalname.split(".");
+                            EXT = EXT[EXT.length-1];
+                            console.log(EXT);
+                            var fs = require('fs');
+                            fs.rename(req.file.path, "public/images/blogs/"+DID+"."+EXT, function(err_upload){
+                                if (err_upload){
+                                    res.json({ status: 'fail', message: 'Error while moving file' });
+                                }
+                                else{
+                                    dbo.collection('blogs').updateOne({_id : ObjectID(DID)}, {$set : {'blog_image_ext' : EXT}}, function(err_ext, res_ext){
+                                        if(err_ext){
+                                            db.close();
+                                            res.json({status : "fail", message : "Error in saving extension of file"});
+                                        }
+                                        else{
+                                            db.close()
+                                            res.json({status : "success"});
+                                        }
+                                    })
+                                }
+                            });
+                        }
+                        else{
+                          db.close();
+                          res.json({status: "fail", message:"Couldn't insert details"});
+                        }
                       }
-                    }
-                  });
-                }
-              });
-          }
-          else{
-              res.json({status: 'failure', message: 'Database connection failed'});
-          }
-      });
+                    });
+                  }
+                });
+            }
+            else{
+                res.json({status: 'fail', message: 'Database connection failed'});
+            }
+        });
+      }
+      else{
+        res.json({
+          status: "fail",
+          message: "Required file missing!"
+        });
+      }
   }
   else{
     res.json({status: 'fail', message: 'Token authentication failed'});
@@ -99,7 +109,7 @@ router.get('/', function (req, res, next) {
     if(err){
       db.close();
       res.json({
-        status: 'failure',
+        status: 'fail',
         message: 'Database Connection Error!!'
       });
     }
@@ -109,7 +119,7 @@ router.get('/', function (req, res, next) {
           if(err1){
             db.close();
             res.json({
-              status: 'failure',
+              status: 'fail',
               message: 'Database Operation Error'
             });
           }
@@ -124,7 +134,7 @@ router.get('/', function (req, res, next) {
             else{
               db.close();
               res.json({
-                status: 'failure',
+                status: 'fail',
                 message: 'Error fetching data'
               });
             }
@@ -143,7 +153,7 @@ router.get('/:id', (req, res, next) => {
       if(err){
         db.close();
         res.json({
-          status: 'failure',
+          status: 'fail',
           message: 'Database Connection Error!!'
         });
       }
@@ -153,7 +163,7 @@ router.get('/:id', (req, res, next) => {
             if(err1){
               db.close();
               res.json({
-                status: 'failure',
+                status: 'fail',
                 message: 'Database Operation Error'
               });
             }
@@ -168,7 +178,7 @@ router.get('/:id', (req, res, next) => {
               else{
                 db.close();
                 res.json({
-                  status: 'failure',
+                  status: 'fail',
                   message: 'Error fetching data'
                 });
               }
@@ -178,7 +188,7 @@ router.get('/:id', (req, res, next) => {
     });
   }else{
     res.json({
-      status: 'failure',
+      status: 'fail',
       message: 'Error in fetching blog data'
     });
   }
@@ -186,7 +196,7 @@ router.get('/:id', (req, res, next) => {
 /*****************************************************Single Blog details get Begins***************************************************************/
 
 /*****************************************************Single Blog details Edit Begins***************************************************************/
-router.put('/update', (req, res, next) => {
+router.put('/',  upload.single('ImageFile'), (req, res, next) => {
   var jwt_token = req.get('authtoken');
   var pBlogTitle = req.body.blogTitle;
   var pBlogDescription = req.body.blogDescription;
@@ -197,7 +207,7 @@ router.put('/update', (req, res, next) => {
         if(err){
           db.close();
           res.json({
-            status: 'failure',
+            status: 'fail',
             message: 'Database Connection failed!!'
           });
         }else{
@@ -210,30 +220,74 @@ router.put('/update', (req, res, next) => {
           }}, (err1, res1) => {
             if(err1){
               db.close();
-              res.json({status: "failure", message: "Database operation error"});
+              res.json({status: "fail", message: "Database operation error"});
             }
             else{
-              if(res1.modifiedCount == 1){
-                db.close();
-                res.json({status: "success", message: "Blog Updated Successfully", data: res1});
+              if(req.file){
+                glob(path.join(uploadPath, req.body.id.toString()) + ".*", function(err2, res2){
+                  if(err2){
+                    db.close();
+                    res.json({
+                      status: "fail",
+                      message: "File search failed!"
+                    });
+                  }
+                  else{
+                    var fs = require('fs');
+                    fs.unlink(res2[0], function (err3, res3){
+                      if(err3){
+                        db.close();
+                        res.json({
+                            status: "fail",
+                            message: "File removal failed!"
+                        });
+                      }
+                      else{
+                        var DID = req.body.id;
+                        var EXT = req.file.originalname.split(".");
+                        EXT = EXT[EXT.length-1];
+                        fs.rename(req.file.path, "public/images/blogs/"+DID+"."+EXT, function(err_upload){
+                          if (err_upload){
+                              db.close();
+                              res.json({ status: 'fail', message: 'Error while moving file' });
+                          }
+                          else{
+                            dbo.collection('blogs').updateOne({_id : ObjectID(DID)}, {$set : {'blog_image_ext' : EXT}}, function(err_ext, res_ext){
+                              if(err_ext){
+                                  db.close();
+                                  res.json({status : "fail", message : "Error in saving Extension of file"})
+                              }
+                              else{
+                                  db.close()
+                                  res.json({status : "success"});
+                              }
+                            });
+                          }
+                        });
+                      }
+                    });
+                  }
+                });
               }
               else{
                 db.close();
-                res.json({status: "failure", message: "No matches found."});
+                res.json({status: "success", message: "Blog Updated Successfully"});
               }
             }
           });
         }
         });
-      }else{
+      }
+      else{
         res.json({
-          status: "failure",
+          status: "fail",
           message: "One or more fields missing."
       });
     }
-  }else{
+  }
+  else{
     res.json({
-      status: 'failure',
+      status: 'fail',
       message: 'Unauthorized access'
     });
   }
@@ -243,7 +297,7 @@ router.put('/update', (req, res, next) => {
 /*****************************************************Blog details Delete Begins***************************************************************/
 router.delete('/', (req, res, next) => {
   let id = req.body.id;
-  if(id === null){
+  if(id !== null){
     var jwt_token = req.get('authtoken');
     if(jwt_token){
       mongo.connect(urlMongo, {useNewUrlParser: true}, (err, db) => {
@@ -252,7 +306,7 @@ router.delete('/', (req, res, next) => {
           dbo.collection('blogs').findOne({_id: ObjectID(id)}, (err1, res1) => {
             if(err1){
               res.json({
-                status: 'failure',
+                status: 'fail',
                 message: 'No such blog exists!!'
               });
             }
@@ -262,15 +316,38 @@ router.delete('/', (req, res, next) => {
                 if(err2){
                   db.close();
                   res.json({
-                    staus: 'failure',
-                    message: 'Blog Deletion failed!!'
+                    staus: 'fail',
+                    message: 'Blog Deletion failed!'
                   });
                 }
                 else{
-                  db.close();
-                  res.json({
-                    status: 'failure',
-                    message: 'Blog deleted successfully!!'
+                  glob(path.join(uploadPath, req.body.id.toString()) + ".*", function (err3, res3) {
+                    if(err3){
+                      db.close();
+                      res.json({
+                        staus: 'fail',
+                        message: 'Blog Deletion failed!'
+                      });
+                    }
+                    else{
+                      var fs = require('fs');
+                      fs.unlink(res3[0], function (err4, res4){
+                        if(err4){
+                          db.close();
+                          res.json({
+                              status: "fail",
+                              message: "Blog Deletion failed!"
+                          });
+                        }
+                        else{
+                          db.close();
+                          res.json({
+                            status: 'success',
+                            message: 'Blog deleted successfully!!'
+                          });
+                        }
+                      });
+                    }
                   });
                 }
               });
@@ -280,22 +357,22 @@ router.delete('/', (req, res, next) => {
         else{
           db.close();
           res.json({
-            status: 'failure',
-            message: 'Database Connection failed'
+            status: 'fail',
+            message: 'Unexpected Error Occured!'
           });
         }
       });
     }
     else{
       res.json({
-        status: 'failure',
+        status: 'fail',
         message: 'Unauthorized access'
       });
     }
   }
   else{
     res.json({
-      status: 'failure',
+      status: 'fail',
       message: 'Missing Parameters Id'
     });
   }

@@ -28,31 +28,32 @@ router.post('/', function (req, res, next){
                   if(err_arr){
                     db.close();
                     res.json({
-                      status: "failure",
+                      status: "fail",
                       message: "Authentication failed!"
                     });
                   }
                   else{
                     dbo.collection("jobs").insertOne({
                       jobTitle: req.body.jobTitle,
-                      jobDatePosted: req.body.jobDatePosted,
+                      jobDatePosted: (new Date()).toDateString(),
                       jobDescription: req.body.jobDescription,
                       jobCompanyName: req.body.jobCompanyName,
                       jobLocation: req.body.jobLocation,
                       jobDeadline: req.body.jobDeadline,
+                      jobSalary: req.body.jobSalary,
                       jobExtLinks: req.body.jobExtLinks,
                       jobApplicationLink: req.body.jobApplicationLink,
-                      jobPostedby: req.body.jobPostedby
+                      jobPostedby: res_auth.name,
+                      jobAddedbyID: uid
                     }, (err1, res1) => {
                       if(err1){
                         db.close();
                         res.json({
-                          status: 'failure',
+                          status: 'fail',
                           message: 'Database operation error'
                         });
                       }
                       else{
-                        console.log(res1);
                         if(res1.insertedId){
                           db.close();
                           res.json({
@@ -82,66 +83,66 @@ router.post('/', function (req, res, next){
 
 /********************************************Job Details Get Begins**************************************************/
 router.get('/', function (req, res, next) {
-  mongo.connect(urlMongo, {useNewUrlParser: true}, (err, db) => {
-    if(err){
-      db.close();
-      res.json({
-        status: 'failure',
-        message: 'Database Connection Error!!'
-      });
-    }
-    else{
-        dbo = db.db('nitraapune');
-        dbo.collection('jobs').find({}).toArray((err1, res1) => {
-          if(err1){
-            db.close();
-            res.json({
-              status: 'failure',
-              message: 'Database operation error'
-            });
-          }
-          else{
-            if(res1){
-              db.close();
-              res.json({
-                status: 'success',
-                data: res1
-              });
-            }
-            else{
-              db.close();
-              res.json({
-                status: 'failure',
-                message: 'Error fetching data'
-              });
-            }
-          }
-        });
-    }
-  });
-});
-/*******************************************Job Details Get Ends*********************************************/
-
-/*******************************************Single Job Details Get Begins*********************************************/
-router.get('/:id', function (req, res, next) {
-  let id = req.params.id;
-  console.log(id);
-  if(id !== null){
+  if(req.get('authtoken')){
+    var jwt_token = req.get('authtoken');
+    var uid = jwt.verify(jwt_token, jwt_salt).tid;
     mongo.connect(urlMongo, {useNewUrlParser: true}, (err, db) => {
       if(err){
         db.close();
         res.json({
-          status: 'failure',
+          status: 'fail',
           message: 'Database Connection Error!!'
         });
       }
       else{
           dbo = db.db('nitraapune');
-          dbo.collection('jobs').findOne({_id: ObjectID(id)}, (err1, res1) => {
+          dbo.collection('jobs').find({}).toArray((err1, res1) => {
             if(err1){
               db.close();
               res.json({
-                status: 'failure',
+                status: 'fail',
+                message: 'Database operation error'
+              });
+            }
+            else{
+              dbo.collection('jobs').find({jobAddedbyID: uid}).toArray((err2, res2) => {
+                if(err2){
+                  db.close();
+                  res.json({
+                    status: 'fail',
+                    message: 'Database operation error'
+                  });
+                }
+                else{
+                  db.close();
+                  res.json({
+                    status: 'success',
+                    data: res1,
+                    data2: res2
+                  });
+                }
+              });
+            }
+          });
+      }
+    });
+  }
+  else{
+    mongo.connect(urlMongo, {useNewUrlParser: true}, (err, db) => {
+      if(err){
+        db.close();
+        res.json({
+          status: 'fail',
+          message: 'Database Connection Error!!'
+        });
+      }
+      else{
+          dbo = db.db('nitraapune');
+          dbo.collection('jobs').find({}).toArray((err1, res1) => {
+            if(err1){
+              db.close();
+              res.json({
+                status: 'fail',
                 message: 'Database operation error'
               });
             }
@@ -156,7 +157,7 @@ router.get('/:id', function (req, res, next) {
               else{
                 db.close();
                 res.json({
-                  status: 'failure',
+                  status: 'fail',
                   message: 'Error fetching data'
                 });
               }
@@ -165,9 +166,108 @@ router.get('/:id', function (req, res, next) {
       }
     });
   }
+});
+/*******************************************Job Details Get Ends*********************************************/
+
+/*******************************************Single Job Details Get Begins*********************************************/
+router.get('/:id', function (req, res, next) {
+  let id = req.params.id;
+  console.log(id);
+  if(id !== null){
+    if(req.get('authtoken')){
+      var jwt_token = req.get('authtoken');
+      var uid = jwt.verify(jwt_token, jwt_salt).tid;
+      mongo.connect(urlMongo, {useNewUrlParser: true}, (err, db) => {
+        if(err){
+          db.close();
+          res.json({
+            status: 'fail',
+            message: 'Database Connection Error!!'
+          });
+        }
+        else{
+            dbo = db.db('nitraapune');
+            dbo.collection('jobs').findOne({_id: ObjectID(id)}, (err1, res1) => {
+              if(err1){
+                db.close();
+                res.json({
+                  status: 'fail',
+                  message: 'Database operation error'
+                });
+              }
+              else{
+                if(res1){
+                  if(res1.jobAddedbyID === uid){
+                    db.close();
+                    res.json({
+                      status: 'success',
+                      data: res1,
+                      editable: true
+                    });
+                  }
+                  else{
+                    db.close();
+                    res.json({
+                      status: 'success',
+                      data: res1
+                    });
+                  }
+                }
+                else{
+                  db.close();
+                  res.json({
+                    status: 'fail',
+                    message: 'Error fetching data'
+                  });
+                }
+              }
+            });
+          }
+      });
+    }
+    else{
+      mongo.connect(urlMongo, {useNewUrlParser: true}, (err, db) => {
+        if(err){
+          db.close();
+          res.json({
+            status: 'fail',
+            message: 'Database Connection Error!!'
+          });
+        }
+        else{
+            dbo = db.db('nitraapune');
+            dbo.collection('jobs').findOne({_id: ObjectID(id)}, (err1, res1) => {
+              if(err1){
+                db.close();
+                res.json({
+                  status: 'fail',
+                  message: 'Database operation error'
+                });
+              }
+              else{
+                if(res1){
+                  db.close();
+                  res.json({
+                    status: 'success',
+                    data: res1
+                  });
+                }
+                else{
+                  db.close();
+                  res.json({
+                    status: 'fail',
+                    message: 'Error fetching data'
+                  });
+                }
+              }
+            });
+          }
+      });
+    }
+  }
   else{
     res.json({
-      status: 'failure',
+      status: 'fail',
       message: 'Error in fetching job data'
     });
   }
@@ -175,24 +275,25 @@ router.get('/:id', function (req, res, next) {
 /*******************************************Single Job Details Get Ends*********************************************/
 
 /*******************************************Job Details Edit Begins*********************************************/
-router.put('/update', (req, res, next) => {
+router.put('/', (req, res, next) => {
   var jwt_token = req.get('authtoken');
   var jobTitle = req.body.jobTitle;
-  var jobDatePosted =  req.body.jobDatePosted;
   var jobDescription=  req.body.jobDescription;
   var jobCompanyName= req.body.jobCompanyName;
   var jobLocation = req.body.jobLocation;
+  var jobSalary = req.body.jobSalary;
   var jobDeadline = req.body.jobDeadline;
   var jobExtLinks = req.body.jobExtLinks;
   var jobApplicationLink = req.body.jobApplicationLink;
-  var jobPostedby = req.body.jobPostedby;
+
   if(jwt_token){
-    if(jobTitle && jobDatePosted && jobDescription && jobCompanyName && jobLocation && jobDeadline && jobExtLinks && jobApplicationLink && jobPostedby){
+    if(jobSalary && jobTitle && jobDescription && jobCompanyName && jobLocation && jobDeadline && jobExtLinks && jobApplicationLink){
+      console.log("Hii");
       mongo.connect(urlMongo, {useNewUrlParser: true}, (err, db) => {
         if(err){
           db.close();
           res.json({
-            status: 'failure',
+            status: 'fail',
             message: 'Database Connection failed!!'
           });
         }else{
@@ -200,41 +301,34 @@ router.put('/update', (req, res, next) => {
           dbo.collection('jobs').updateOne({_id: ObjectID(req.body.id)},
           {$set:{
             jobTitle: jobTitle,
-            jobDatePosted: jobDatePosted,
             jobDescription: jobDescription,
             jobCompanyName: jobCompanyName,
             jobLocation: jobLocation,
+            jobSalary: jobSalary,
             jobDeadline: jobDeadline,
             jobExtLinks: jobExtLinks,
-            jobApplicationLink: jobApplicationLink,
-            jobPostedby: jobPostedby
+            jobApplicationLink: jobApplicationLink
           }}, (err1, res1) => {
             if(err1){
               db.close();
-              res.json({status: "failure", message: "Database operation error"});
+              res.json({status: "fail", message: "Database operation error"});
             }
             else{
-              if(res1.modifiedCount == 1){
-                db.close();
-                res.json({status: "success", message: "Job Details Updated Successfully", data: res1});
-              }
-              else{
-                db.close();
-                res.json({status: "failure", message: "No matches found."});
-              }
+              db.close();
+              res.json({status: "success", message: "Job Details Updated Successfully"});
             }
           });
         }
         });
       }else{
         res.json({
-          status: "failure",
+          status: "fail",
           message: "One or more fields missing."
       });
     }
   }else{
     res.json({
-      status: 'failure',
+      status: 'fail',
       message: 'Unauthorized access'
     });
   }
@@ -244,7 +338,7 @@ router.put('/update', (req, res, next) => {
 /*******************************************Job Details Delete Begins*********************************************/
 router.delete('/', (req, res, next) => {
   let id = req.body.id;
-  if(id === null){
+  if(id !== null){
     var jwt_token = req.get('authtoken');
     if(jwt_token){
       mongo.connect(urlMongo, {useNewUrlParser: true}, (err, db) => {
@@ -253,7 +347,7 @@ router.delete('/', (req, res, next) => {
           dbo.collection('jobs').findOne({_id: ObjectID(id)}, (err1, res1) => {
             if(err1){
               res.json({
-                status: 'failure',
+                status: 'fail',
                 message: 'No such event exists!'
               });
             }
@@ -263,7 +357,7 @@ router.delete('/', (req, res, next) => {
                 if(err2){
                   db.close();
                   res.json({
-                    status: 'failure',
+                    status: 'fail',
                     message: 'Job Deletion failed!!'
                   });
                 }
@@ -281,7 +375,7 @@ router.delete('/', (req, res, next) => {
         else{
           db.close();
           res.json({
-            status: 'failure',
+            status: 'fail',
             message: 'Database Connection failed'
           });
         }
@@ -289,14 +383,14 @@ router.delete('/', (req, res, next) => {
     }
     else{
       res.json({
-        status: 'failure',
+        status: 'fail',
         message:'Unauthorized access'
       });
     }
   }
   else{
     res.json({
-      status: 'failure',
+      status: 'fail',
       message: 'Missing Parameters'
     });
   }

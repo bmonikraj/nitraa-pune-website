@@ -154,63 +154,96 @@ class ModeratorDashboard extends React.Component{
     addEvent(){
       let eventName = $("#event-name").val();
       let eventDate = $("#event-date").val();
-      let eventTime = $("event-time").val();
+      let eventTime = $("#event-time").val();
       let eventLocation = $("#event-location").val();
       let eventDescription = $("#event-description").val();
       let eventExtLinks = $("#event-external-links").val();
       let eventRegFees = $("#event-registration-fees").val();
       let eventCreatedby = $("#event-created-by").val();
       let eventOnBehalfof = $("#event-on-behalf-of").val();
-      axios({
-        method: "POST",
-        url: '/events',
-        headers: {
-          authtoken: localStorage.getItem('authtoken')
-        },
-        data: {
-          eventName: eventName,
-          eventDate: eventDate,
-          eventTime: eventTime,
-          eventLocation: eventLocation,
-          eventDescription: eventDescription,
-          eventExtLinks: eventExtLinks,
-          eventRegFees: eventRegFees,
-          eventCreatedby: eventCreatedby,
-          eventOnBehalfof: eventOnBehalfof
-        }
-      }).then((response) => {
-        console.log(response);
-        if(response.data.status === "success"){
-          alert("Event details added successfully!!");
-        }
-      }).catch((error) => {
-        console.log(error);
-      })
+      console.log($("#event-image")[0].files[0]);
+      if(eventName=="" || eventDate=="" || eventTime=="" || eventLocation=="" || eventDescription=="" || eventExtLinks=="" || eventRegFees=="" || eventCreatedby=="" || eventOnBehalfof==""){
+        this.setState({ModeratorAlertText : "One or more field(s) empty.", ModeratorAlertStyle : "danger"});
+        this.handleModeratorAlertShow();
+      }
+      else{
+        var formdata = new FormData();
+        formdata.append("ImageFile", $("#event-image")[0].files[0]);
+        formdata.append("eventName",eventName);
+        formdata.append("eventDate",eventDate);
+        formdata.append("eventTime",eventTime);
+        formdata.append("eventLocation",eventLocation);
+        formdata.append("eventDescription",eventDescription);
+        formdata.append("eventExtLinks",eventExtLinks);
+        formdata.append("eventRegFees",eventRegFees);
+        formdata.append("eventCreatedby",eventCreatedby);
+        formdata.append("eventOnBehalfof",eventOnBehalfof);
+
+        var _self = this;
+        axios({
+          method: "POST",
+          url: '/events',
+          headers: {
+            authtoken: localStorage.getItem('authtoken'),
+            'Content-Type': 'multipart/form-data'
+          },
+          data: formdata
+        }).then((response) => {
+          console.log(response);
+          if(response.data.status === "success"){
+            _self.setState({ModeratorAlertText : "Event details added successfully", ModeratorAlertStyle : "success"});
+            _self.handleModeratorAlertShow();
+            window.open("/moderator-dashboard", "_self");
+          }
+          else{
+            _self.setState({ModeratorAlertText : response.data.message, ModeratorAlertStyle : "danger"});
+            _self.handleModeratorAlertShow();
+          }
+        }).catch((error) => {
+          console.log(error);
+        })
+      }
     }
 
     addBlog(){
       let blogTitle = $("#blog-title").val();
-      let blogDescription = $("#blog-posted-by").val();
-      let blogPostedby = $("blog-description").val();
-      axios({
-        method: "POST",
-        url: '/blogs',
-        headers: {
-          authtoken: localStorage.getItem('authtoken')
-        },
-        data: {
-          blogTitle: blogTitle,
-          blogDescription: blogDescription,
-          blogPostedby: blogPostedby
-        }
-      }).then((response) => {
-        console.log(response);
-        if(response.data.status === "success"){
-          alert("Blog details added successfully!!");
-        }
-      }).catch((error) => {
-        console.log(error);
-      })
+      let blogPostedby = $("#blog-posted-by").val();
+      let blogDescription = $("#blog-description").val();
+      if(blogTitle=="" || blogDescription=="" || blogPostedby=="" || !($("#blog-image")[0].files)){
+        this.setState({ModeratorAlertText : "One or more field(s) empty.", ModeratorAlertStyle : "danger"});
+        this.handleModeratorAlertShow();
+      }
+      else{
+        var formdata = new FormData();
+        formdata.append("ImageFile", $("#blog-image")[0].files[0]);
+        formdata.append("blogTitle",blogTitle);
+        formdata.append("blogDescription",blogDescription);
+        formdata.append("blogPostedby",blogPostedby);
+
+        var _self = this;
+        axios({
+          method: "POST",
+          url: '/blogs',
+          headers: {
+            authtoken: localStorage.getItem('authtoken'),
+            'Content-Type': 'multipart/form-data'
+          },
+          data: formdata
+        }).then((response) => {
+          console.log(response);
+          if(response.data.status === "success"){
+            _self.setState({ModeratorAlertText : "Blog added successfully", ModeratorAlertStyle : "success"});
+            _self.handleModeratorAlertShow();
+            window.open("/moderator-dashboard", "_self");
+          }
+          else{
+            _self.setState({ModeratorAlertText : response.data.message, ModeratorAlertStyle : "danger"});
+            _self.handleModeratorAlertShow();
+          }
+        }).catch((error) => {
+          console.log(error);
+        })
+      }
     }
     render(){
 
@@ -238,7 +271,7 @@ class ModeratorDashboard extends React.Component{
                                             <Col md={7}>
                                                 <Form.Control type="text" id="gallery-caption" placeholder="Caption" required></Form.Control>
                                             </Col>
-                                            <Col  md={1}>
+                                            <Col md={1}>
                                                 <Button variant="primary" id="gallery-upload">
                                                     Upload
                                                 </Button>
@@ -266,44 +299,44 @@ class ModeratorDashboard extends React.Component{
                                 <div style={{padding:"2vw"}}>
                                     <Form>
                                         <Row style ={{padding: "1rem"}}>
-                                          <Col>
+                                          <Col md={3} style={{padding: "0.5rem 0.5rem"}}>
                                             <Form.Control type="text" id="event-name" placeholder = "Name" required></Form.Control>
                                           </Col>
-                                          <Col>
+                                          <Col md={3} style={{padding: "0.5rem 0.5rem"}}>
                                             <Form.Control type="date" id = "event-date" placeholder = "Date" required></Form.Control>
                                           </Col>
-                                          <Col>
+                                          <Col md={3} style={{padding: "0.5rem 0.5rem"}}>
                                             <Form.Control type = "time" id = "event-time" placeholder = "hrs:mins" required></Form.Control>
                                           </Col>
-                                          <Col>
+                                          <Col md={3} style={{padding: "0.5rem 0.5rem"}}>
                                             <Form.Control type = "text" id = "event-location" placeholder = "Location" required></Form.Control>
                                           </Col>
                                         </Row>
 
-                                        <Row style ={{padding: "1rem", margin: "0"}}>
+                                        <Row style ={{padding: "1rem 1.5rem"}}>
                                             <Form.Control as = "textarea" rows = "3" type ="text" id = "event-description" placeholder = "Description" required></Form.Control>
                                         </Row>
 
                                         <Row style ={{padding: "1rem"}}>
-                                          <Col>
+                                          <Col md={6} style={{padding: "0.5rem 0.5rem"}}>
                                             <Form.Control type = "text" id = "event-external-links" placeholder = "External Links" required></Form.Control>
                                           </Col>
 
-                                          <Col>
+                                          <Col md={6} style={{padding: "0.5rem 0.5rem"}}>
                                             <Form.Control type = "text" id = "event-registration-fees" placeholder = "Registration Fees"></Form.Control>
                                           </Col>
                                         </Row>
 
                                         <Row style ={{padding: "1rem"}}>
-                                          <Col>
-                                            <Form.Control type = "text" id = "event-created-by" placeholder = "Created By" required></Form.Control>
+                                          <Col md={4} style={{padding: "0.5rem 0.5rem"}}>
+                                            <Form.Control type = "text" id = "event-created-by" placeholder = "Organized By" required></Form.Control>
                                           </Col>
 
-                                          <Col>
+                                          <Col md={4} style={{padding: "0.5rem 0.5rem"}}>
                                             <Form.Control type = "text" id = "event-on-behalf-of" placeholder = "On Behalf of" required></Form.Control>
                                           </Col>
 
-                                          <Col>
+                                          <Col md={4} style={{padding: "0.5rem 0.5rem"}}>
                                             <Form.Control type = "file" id = "event-image" required></Form.Control>
                                           </Col>
                                         </Row>
@@ -317,20 +350,20 @@ class ModeratorDashboard extends React.Component{
                             </Tab>
                             <Tab eventKey = "blog" title = "BLOG">
                                 <div style={{padding:"2vw"}}>
-                                  <div style ={{padding: "1rem", margin: "0"}}>
+                                  <Row style ={{padding: "1rem 1.5rem"}}>
                                     <Form.Control type = "file" id = "blog-image" required></Form.Control>
-                                  </div>
+                                  </Row>
 
                                   <Row style = {{padding: "1rem"}}>
-                                    <Col>
+                                    <Col md={6} style={{padding: "0.5rem 0.5rem"}}>
                                       <Form.Control type = "text" id = "blog-title" placeholder = "Title" required></Form.Control>
                                     </Col>
-                                    <Col>
+                                    <Col md={6} style={{padding: "0.5rem 0.5rem"}}>
                                       <Form.Control type = "text" id  = "blog-posted-by" placeholder = "Posted by" required></Form.Control>
                                     </Col>
                                   </Row>
 
-                                  <Row style ={{padding: "1rem", margin: "0"}}>
+                                  <Row style ={{padding: "1rem 1.5rem"}}>
                                     <Form.Control as = "textarea" rows = "5" id = "blog-description" placeholder = "Description"></Form.Control>
                                   </Row>
 

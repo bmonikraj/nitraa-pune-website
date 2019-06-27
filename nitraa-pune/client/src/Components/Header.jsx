@@ -114,11 +114,15 @@ class Header extends React.Component {
                                 <MaterialIcons icon="photo"/>&nbsp;Gallery
                             </Nav.Link>
                             <NavDropdown title="Initiatives" id="collasible-nav-dropdown" style={itemStyle}>
-                                <NavDropdown.Item href="/events" style={itemStyle}>
+                                <NavDropdown.Item href="/events-list" style={itemStyle}>
                                     <MaterialIcons icon="event"/>&nbsp;Events
                                 </NavDropdown.Item>
                                 <NavDropdown.Divider />
-                                <NavDropdown.Item href="/jobs" style={itemStyle}>
+                                <NavDropdown.Item href="/blogs-list" style={itemStyle}>
+                                    <MaterialIcons icon="subtitles"/>&nbsp;Blogs
+                                </NavDropdown.Item>
+                                <NavDropdown.Divider />
+                                <NavDropdown.Item href="/jobs-list" style={itemStyle}>
                                     <MaterialIcons icon="school"/>&nbsp;Careers
                                 </NavDropdown.Item>
                                 <NavDropdown.Divider />
