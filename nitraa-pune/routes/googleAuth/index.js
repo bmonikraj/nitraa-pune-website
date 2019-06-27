@@ -3,131 +3,130 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-var passport = require('passport')
-  , GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 var express = require('express');
 var path = require('path');
 var mongo = require('mongodb').MongoClient;
 var ObjectID = require('mongodb').ObjectID;
 var bodyParser = require('body-parser');
 var app = express();
+var jwt = require('jsonwebtoken');
+var jwt_salt = require('../constant/jwt/index');
 var urlMongo = require('../constant/mongodbAddress/index');
-//var urlMongo = require('../constant/mongo/index');
 
-var config = require("../constant/app_credentials/index");
+router = express.Router();
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-  extended: true
-}));
+router.post('/', (req, res, next) => {
+   let profileObj = req.body.profileObj;
+   console.log(profileObj);
+   mongo.connect(urlMongo, {useNewUrlParser : true}, (err, db) => {
+     if(err){
+       res.json({
+         status: "fail",
+         message: "Error in connection. Please try after some time."
+       });
+     }
+     else{
+       dbo = db.db("nitraapune");
+       dbo.collection("users").findOne({ email: profileObj.email }, (err1, res1) => {
+         if(err1){
+           db.close();
+           res.json({
+             status: "fail",
+             message: "Unexpected Error. Please try after some time."
+           });
+         }
+         else{
+           if(res1 != null){
+             if(res1.type === "google"){
+               var userId = res1._id;
+               var jwtToken = jwt.sign({tid: userId}, jwt_salt);
+               if(jwtToken){
+                 db.close();
+                 res.set({
+                   'authtoken': jwtToken
+                 });
+                 res.json({
+                   status: "success",
+                   message: "Successfully logged in."
+                 });
+               }
+               else{
+                 db.close();
+                 res.json({
+                   status: "fail",
+                   message: "Could not log in."
+                 });
+               }
+             }
+             else{
+               db.close();
+               res.json({
+                 status: "fail",
+                 message: "Email Address already registered in an existing account."
+               });
+             }
+           }
+           else{
+             dbo.collection("users").insertOne({
+               "name": profileObj.name,
+               "email": profileObj.email,
+               "type": "google",
+               "idToken": profileObj.googleId,
+               "address": "",
+               "phone": "",
+               "father": "",
+               "mother" : "",
+               "spouse_name": "",
+               "dob" : "",
+               "children": [],
+               "siblings": [],
+               "permanent_adr": "",
+               "hobbies": [],
+               "cover_pic_ext": null
+             }, (err2,res2)=>{
+               if(err2){
+                 db.close();
+                 res.json({
+                   status: "fail",
+                   response: "Unexpected Error. Please try after some time."
+                 });
+               }
+               else{
+                 if(res2.insertedId){
+                   var userId = res2.insertedId;
+                   var jwtToken = jwt.sign({tid: userId}, jwt_salt);
+                   if(jwtToken){
+                     db.close();
+                     res.set({
+                       'authtoken': jwtToken
+                     });
+                     res.json({
+                       status: "success",
+                       response: "Successfully logged in."
+                     });
+                   }
+                   else{
+                     db.close();
+                     res.json({
+                       status: "fail",
+                       response: "Could not log in."
+                     });
+                   }
+                 }
+                 else{
+                   db.close();
+                   res.json({
+                     status: "fail",
+                     response: "Could not log in."
+                   });
+                 }
+               }
+             });
+           }
+         }
+       });
+     }
+   })
+ });
 
-routes = express.Router();
-
-passport.serializeUser((user,done)=>{
-    done(null, user.id)
-});
-
-passport.deserializeUser((ID,done)=>{
-    mongo.connect(urlMongo, {useNewUrlParser : true}, function(error, db){
-        if(error == null)
-        {
-            dbo = db.db("nitraapune");
-            dbo.collection("users").findOne({"idToken" : ID}).toArray(function (err, result){
-                done(null, result);
-            });
-        }
-    });
-});
-
-passport.use(new GoogleStrategy({
-        clientID: config.googleAuth.consumerKey,
-        clientSecret: config.googleAuth.consumerSecret,
-        callbackURL: config.googleAuth.callbackURL,
-        profileFields: ['emails']
-    },
-    function(accessToken, refreshToken, profile, done) {
-        done(null, profile);
-    }
-));
-
-routes.get('/', passport.authenticate('google',{ scope: ['email', 'profile'] }));
-
-routes.get('/callback', passport.authenticate('google'), function(req, res, next){
-    //console.log(req.user);
-    mongo.connect(urlMongo, {useNewUrlParser : true}, function(error, db){
-        if(error == null)
-        {
-            dbo = db.db("nitraapune");
-            dbo.collection("users").findOne({"email" : req.user.emails[0].value},function (err, result){
-                if(err)
-                {
-                    db.close();
-                    res.redirect("http://localhost:3000/login?status=fail&message=Login%20Failed");
-                }
-                else
-                {
-                    if(result == null)
-                    {
-                        dbo.collection("users").insertMany([{"name": req.user.name.givenName, "email": req.user.emails[0].value, "type": "google", "idToken": req.user.id, "address": "","phone": "", "father": "", "mother" : "", "spouse_name": "", "dob" : "", "children": [],
-                        "siblings": [],"permanent_adr": "", "hobbies": [], "cover_pic_ext": null, "log_timestamp": ""}], (err1,result1) => {
-                            if (err1) {
-                                db.close();
-                                res.redirect("http://localhost:3000/login?status=fail&message=Login%20Failed");
-                            }
-                            else
-                            {
-                                dbo.collection("users").updateOne({_id: ObjectID(result1.insertedIds["0"])}, {
-                                    $set: {
-                                        log_timestamp : Date.now()
-                                    }
-                                }, function(err2, res2){
-                                    if(!err2)
-                                    {
-                                        db.close();
-                                        res.redirect("http://localhost:3000/loginCheck?id="+result1.insertedIds["0"].toString());
-                                    }
-                                    else
-                                    {
-                                        db.close();
-                                        res.redirect("http://localhost:3000/login?status=fail&message=Error%20occured%20while%20logging%20in");
-                                    }
-                                });
-                            }
-                        });
-                    }
-                    else
-                    {
-                        if(result.type === "google")
-                        {
-                            dbo.collection("users").updateOne({_id: ObjectID(result._id)}, {
-                                $set:
-                                {
-                                    log_timestamp: Date.now()
-                                }
-                            }, function(err2, res2){
-                                if(!err2)
-                                {
-                                    db.close();
-                                    res.redirect("http://localhost:3000/loginCheck?id="+result._id.toString());
-                                }
-                                else
-                                {
-                                    db.close();
-                                    res.redirect("http://localhost:3000/login?status=fail&message=Error%20occured%20while%20logging%20in");
-                                }
-                            });
-                        }
-                        else
-                        {
-                            db.close();
-                            res.redirect("http://localhost:3000/login?status=fail&message=Email%20address%20already%20registered%20in%20an%20existing%20account");
-                        }
-                    }
-                }
-            });
-        }
-    });
-});
-
-module.exports = routes;
-
+module.exports = router;
