@@ -146,6 +146,9 @@ class AboutUs extends React.Component {
                                     <th>Mobile</th>
                                     <th>Temporary Address</th>
                                     <th>Permanent Address</th>
+                                    <th>Spouse</th>
+                                    <th>Children</th>
+                                    <th>Hobbies</th>
                                 </tr>
                               </thead>
                               <tbody>
@@ -160,6 +163,9 @@ class AboutUs extends React.Component {
                                         <td>{item.phone}</td>
                                         <td>{item.address}</td>
                                         <td>{item.permanent_adr}</td>
+                                          <td>{item.spouse_name}</td>
+                                        <td>{item.children}</td>
+                                        <td>{item.hobbies}</td>
                                     </tr>
                                   );
                                 })}
