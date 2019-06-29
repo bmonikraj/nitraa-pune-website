@@ -21,6 +21,7 @@ class Profile extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChangeFullName = this.handleChangeFullName.bind(this);
         this.handleChangeDOB = this.handleChangeDOB.bind(this);
+        this.handleChangeYOP = this.handleChangeYOP.bind(this);
         this.handleChangePreAdr = this.handleChangePreAdr.bind(this);
         this.handleChangePerAdr = this.handleChangePerAdr.bind(this);
         this.handleChangeMob = this.handleChangeMob.bind(this);
