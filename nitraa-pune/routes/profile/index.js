@@ -89,7 +89,8 @@ router.put('/update', function(req, res, next){
                         children: req.body.children,
                         permanent_adr: req.body.permanent_adr,
                         hobbies: req.body.hobbies,
-                        siblings: req.body.siblings
+                        siblings: req.body.siblings,
+                        yop: req.body.yop
                     }}, function(err1, res1){
                         if(err1)
                         {
