@@ -27,7 +27,7 @@ router.get('/', function (req, res, next) {
       }
       else{
         dbo = db.db('nitraapune');
-        dbo.collection('users').find({}).toArray((err1, res1) => {
+        dbo.collection('users').find({}).sort({"yop":1, "name":1}).toArray((err1, res1) => {
           if(err1){
             db.close();
             res.json({
