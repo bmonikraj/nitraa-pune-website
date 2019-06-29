@@ -30,6 +30,7 @@ router.post('/', function (req, res, next) {
         "address": "",
         "type": "custom",
         "dob": "",
+        "yop":"",
         "father" : "",
         "mother" : "",
         "spouse_name": "",
