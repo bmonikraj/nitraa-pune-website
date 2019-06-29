@@ -21,7 +21,8 @@ class BlogHandle extends React.Component {
       super(props);
       this.state = {
         blogListArray: [],
-        arrayLength: 0
+        arrayLength: 0,
+        responseFetched: 0
       }
 
   }
@@ -33,52 +34,112 @@ class BlogHandle extends React.Component {
       }).then((response) => {
         console.log(response);
         if(response.data.status === "success"){
-          _self_parent.setState({blogListArray: response.data.data, arrayLength: response.data.data.length});
+          _self_parent.setState({blogListArray: response.data.data, arrayLength: response.data.data.length, responseFetched: 1});
+        }
+        else{
+          _self_parent.setState({responseFetched: 300});
         }
       }).catch((error) => {
         console.log(error);
+        _self_parent.setState({responseFetched: 300});
       })
   }
 
   render() {
-    let elem = "";
-    if(this.state.arrayLength){
-        elem = this.state.blogListArray.map((item, index) => {
-            return (<SingleBlogContainer
-              blogDetails = {item}
-              blogId = {item._id}
-              key = {item._id}
-              />);
-        })
-    }
-    else{
-      elem = <center>No blogs to display</center>
-    }
-    const styleTableDiv = {
-        marginTop : '15vh',
-        marginBottom : '15vh',
-        padding: "10px",
-        background: "#eee"
-    }
-    return(
-      <Container>
-        <Header/>
-          <div style = {styleTableDiv}>
-            <Row>
-              <Col>
-              <center><h2>Blogs</h2></center>
-              </Col>
-            </Row>
-            <hr/>
-            <Row style ={{padding: "1rem", margin: "0"}}>
+    if(this.state.responseFetched === 0){
+      const styleTableDiv = {
+          marginTop : '15vh',
+          marginBottom : '15vh',
+          padding: "10px",
+          background: "#eee"
+      }
+      return(
+        <Container>
+          <Header/>
+            <div style = {styleTableDiv}>
+              <Row>
                 <Col>
-                  {elem}
+                <center><h2>Blogs</h2></center>
                 </Col>
-            </Row>
-          </div>
-        <Footer/>
-      </Container>
-    )
+              </Row>
+              <hr/>
+              <Row style ={{padding: "1rem", margin: "0"}}>
+                  <Col>
+                    <center>Loading ...</center>
+                  </Col>
+              </Row>
+            </div>
+          <Footer/>
+        </Container>
+      )
+    }
+    else if(this.state.responseFetched === 300){
+      const styleTableDiv = {
+          marginTop : '15vh',
+          marginBottom : '15vh',
+          padding: "10px",
+          background: "#eee"
+      }
+      return(
+        <Container>
+          <Header/>
+            <div style = {styleTableDiv}>
+              <Row>
+                <Col>
+                <center><h2>Blogs</h2></center>
+                </Col>
+              </Row>
+              <hr/>
+              <Row style ={{padding: "1rem", margin: "0"}}>
+                  <Col>
+                    <center>Something Went Wrong. Please try again later..</center>
+                  </Col>
+              </Row>
+            </div>
+          <Footer/>
+        </Container>
+      )
+    }
+    else if(this.state.responseFetched === 1){
+      let elem = "";
+      if(this.state.arrayLength){
+          elem = this.state.blogListArray.map((item, index) => {
+              return (<SingleBlogContainer
+                blogDetails = {item}
+                blogId = {item._id}
+                key = {item._id}
+                />);
+          })
+      }
+      else{
+        elem = <center>No blogs to display</center>
+      }
+      const styleTableDiv = {
+          marginTop : '15vh',
+          marginBottom : '15vh',
+          padding: "10px",
+          background: "#eee"
+      }
+      return(
+        <Container>
+          <Header/>
+            <div style = {styleTableDiv}>
+              <Row>
+                <Col>
+                <center><h2>Blogs</h2></center>
+                </Col>
+              </Row>
+              <hr/>
+              <Row style ={{padding: "1rem", margin: "0"}}>
+                  <Col>
+                    {elem}
+                  </Col>
+              </Row>
+            </div>
+          <Footer/>
+        </Container>
+      )
+    }
   }
 }
 export default BlogHandle;

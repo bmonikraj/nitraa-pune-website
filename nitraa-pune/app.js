@@ -20,6 +20,7 @@ var eventDetails = require('./routes/eventDetails/index');
 var jobDetails = require('./routes/jobDetails/index');
 var moderatorGallery = require('./routes/moderator-utility/gallery/index');
 var eventRegistration = require('./routes/eventRegistration/index');
+var membersDirectory = require('./routes/membersDirectory/index');
 
 var app = express();
 
@@ -54,6 +55,7 @@ app.use('/events', eventDetails);
 app.use('/blogs', blogDetails);
 app.use('/jobs', jobDetails);
 app.use('/event-reg', eventRegistration);
+app.use('/members-directory', membersDirectory);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

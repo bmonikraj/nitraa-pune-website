@@ -19,12 +19,14 @@ class Footer extends React.Component{
         this.state = {
             contactUs_Show : false,
             privacyPolicy_Show : false,
-            termsUsage_Show : false
+            termsUsage_Show : false,
+            developerTeam_Show: false
         }
 
         this.handleContactUs = this.handleContactUs.bind(this);
         this.handlePrivacyPolicy = this.handlePrivacyPolicy.bind(this);
         this.handleTermsUsage = this.handleTermsUsage.bind(this);
+        this.handleDeveloperTeam = this.handleDeveloperTeam.bind(this);
     }
 
     handleContactUs(){
@@ -34,6 +36,15 @@ class Footer extends React.Component{
         else{
             this.setState({contactUs_Show : true});
         }
+    }
+
+    handleDeveloperTeam(){
+      if(this.state.developerTeam_Show){
+          this.setState({developerTeam_Show : false});
+      }
+      else{
+          this.setState({developerTeam_Show : true});
+      }
     }
 
     handlePrivacyPolicy(){
@@ -56,100 +67,114 @@ class Footer extends React.Component{
 
     render(){
         const itemStyle = {
-            display:"inline-flex", 
+            display:"inline-flex",
             verticleAlign:"middle",
             fontSize: "small",
             fontWeight: "bold"
         }
         return (
             <Container>
+
                 <Navbar bg="light" fixed="bottom">
-                    
                         <MediaQuery query="(min-device-width: 769px)">
-                            <Row style={{paddingLeft : "35%"}}>
-                                <Col xs={{span: 1, offset:1}}>
-                                    <Nav.Link>
-                                        <OverlayTrigger
-                                        key="top"
-                                        placement="top"
-                                        overlay={
-                                            <Tooltip id={`Contact Us`}>
-                                                Contact Us
-                                            </Tooltip>
-                                        }
-                                        >
-                                            <MaterialIcons onClick={this.handleContactUs} icon="call" size="small"/>
-                                        </OverlayTrigger>
-                                    </Nav.Link>
-                                </Col>
-                                <Col xs={{span:1, offset:1}}>
-                                    <Nav.Link href="#">
+                          <Row style={{width: "100%"}}>
+                            <Col>
+                              <center>
+                                <Row style={{width: "30%"}}>
+                                    <Col xs={12} style={{marginBottom: "0.3rem", fontSize: "0.8rem"}}>
+                                      <center>Developed by <a style={{color: "grey", cursor: "pointer"}} onClick={this.handleDeveloperTeam}><b>Monik Raj Behera and Team</b></a></center>
+                                    </Col>
+                                    <Col xs={3}>
+                                        <Nav.Link>
                                             <OverlayTrigger
                                             key="top"
                                             placement="top"
                                             overlay={
-                                                <Tooltip id={`FAQ`}>
-                                                    Frequently Asked Questions
+                                                <Tooltip id={`Contact Us`}>
+                                                    Contact Us
                                                 </Tooltip>
                                             }
                                             >
-                                                <MaterialIcons icon="help" size="small"/>
+                                                <MaterialIcons onClick={this.handleContactUs} icon="call" size="small"/>
                                             </OverlayTrigger>
-                                    </Nav.Link>
-                                </Col>
-                                <Col xs={{span:1, offset:1}}>
-                                    <Nav.Link href="#">
-                                            <OverlayTrigger
-                                            key="top"
-                                            placement="top"
-                                            overlay={
-                                                <Tooltip id={`Privacy Policy`}>
-                                                    Privacy Policy
-                                                </Tooltip>
-                                            }
-                                            >
-                                                <MaterialIcons onClick={this.handlePrivacyPolicy} icon="phonelink_lock" size="small"/>
-                                            </OverlayTrigger>
-                                    </Nav.Link>
-                                </Col>
-                                <Col xs={{span:1, offset:1}}>
-                                    <Nav.Link href="#" style={itemStyle}>
-                                            <OverlayTrigger
-                                            key="top"
-                                            placement="top"
-                                            overlay={
-                                                <Tooltip id={'Terms Of Usage'}>
-                                                    Terms Of Usage
-                                                </Tooltip>
-                                            }
-                                            >
-                                                <MaterialIcons onClick={this.handleTermsUsage} icon="ballot" size="small"/>
-                                            </OverlayTrigger>
-                                    </Nav.Link>
-                                </Col>
-                            </Row>
+                                        </Nav.Link>
+                                    </Col>
+                                    <Col xs={3}>
+                                        <Nav.Link href="#">
+                                                <OverlayTrigger
+                                                key="top"
+                                                placement="top"
+                                                overlay={
+                                                    <Tooltip id={`FAQ`}>
+                                                        Frequently Asked Questions
+                                                    </Tooltip>
+                                                }
+                                                >
+                                                    <MaterialIcons icon="help" size="small"/>
+                                                </OverlayTrigger>
+                                        </Nav.Link>
+                                    </Col>
+                                    <Col xs={3}>
+                                        <Nav.Link href="#">
+                                                <OverlayTrigger
+                                                key="top"
+                                                placement="top"
+                                                overlay={
+                                                    <Tooltip id={`Privacy Policy`}>
+                                                        Privacy Policy
+                                                    </Tooltip>
+                                                }
+                                                >
+                                                    <MaterialIcons onClick={this.handlePrivacyPolicy} icon="phonelink_lock" size="small"/>
+                                                </OverlayTrigger>
+                                        </Nav.Link>
+                                    </Col>
+                                    <Col xs={3}>
+                                        <Nav.Link href="#" style={itemStyle}>
+                                                <OverlayTrigger
+                                                key="top"
+                                                placement="top"
+                                                overlay={
+                                                    <Tooltip id={'Terms Of Usage'}>
+                                                        Terms Of Usage
+                                                    </Tooltip>
+                                                }
+                                                >
+                                                    <MaterialIcons onClick={this.handleTermsUsage} icon="ballot" size="small"/>
+                                                </OverlayTrigger>
+                                        </Nav.Link>
+                                    </Col>
+                                </Row>
+                              </center>
+                            </Col>
+                          </Row>
                         </MediaQuery>
                         <MediaQuery query="(max-device-width: 768px)">
-                            <Row>
-                                <Col xs={12}>
-                                <Row style={{paddingLeft : "35%"}}>
-                                    <Col xs={{span:3}}>
+                          <Row style={{width: "100%"}}>
+                            <Col>
+                              <center>
+                                <Row style={{width: "90%", marginLeft: "5%"}}>
+                                    <Col xs={12} style={{marginBottom: "0.3rem", fontSize: "0.8rem"}}>
+                                      <center>Developed by <a style={{color: "grey", cursor: "pointer"}} onClick={this.handleDeveloperTeam}><b>Monik Raj Behera and Team</b></a></center>
+                                    </Col>
+                                    <Col xs={3}>
                                         <MaterialIcons onClick={this.handleContactUs} icon="call" size="small"/>
                                     </Col>
                                     <Col xs={3}>
-                                        <MaterialIcons icon="help" size="small"/>                                        
+                                        <MaterialIcons icon="help" size="small"/>
                                     </Col>
                                     <Col xs={3}>
-                                        <MaterialIcons onClick={this.handlePrivacyPolicy} icon="phonelink_lock" size="small"/>                                        
+                                        <MaterialIcons onClick={this.handlePrivacyPolicy} icon="phonelink_lock" size="small"/>
                                     </Col>
                                     <Col xs={3}>
-                                        <MaterialIcons onClick={this.handleTermsUsage} icon="ballot" size="small"/>                                       
+                                        <MaterialIcons onClick={this.handleTermsUsage} icon="ballot" size="small"/>
                                     </Col>
                                 </Row>
-                                </Col>
-                            </Row>
+                              </center>
+                            </Col>
+                          </Row>
                         </MediaQuery>
-                    
+
                 </Navbar>
 
                 <Modal style={{width:"80vw !important", fontSize:"75%"}} show={this.state.contactUs_Show} onHide={this.handleContactUs}>
@@ -181,6 +206,33 @@ class Footer extends React.Component{
                             </tr>
                         </tbody>
                     </Table>
+                </Modal.Body>
+                </Modal>
+
+                <Modal style={{width:"80vw !important", fontSize:"75%"}} show={this.state.developerTeam_Show} onHide={this.handleDeveloperTeam}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Developed by</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <hr/>
+                      <div>
+                        <center>
+                          <h6><b>MONIK RAJ BEHERA</b></h6>
+                        </center>
+                        <center>
+                          <b>LinkedIn:</b> <a href="https://www.linkedin.com/in/bmonikraj" target="_blank" style={{color: "grey"}}>https://linkedin.com/in/bmonikraj</a>
+                        </center>
+                      </div>
+                    <hr/>
+                      <div>
+                        <center>
+                          <h6><b>AJIT KUMAR BEHERA</b></h6>
+                        </center>
+                        <center>
+                          <b>LinkedIn:</b> <a href="https://www.linkedin.com/in/ajit-kumar-behera-37a560162/" target="_blank" style={{color: "grey"}}>https://www.linkedin.com/in/ajit-kumar-behera-37a560162/</a>
+                        </center>
+                      </div>
+                    <hr/>
                 </Modal.Body>
                 </Modal>
 
