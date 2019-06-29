@@ -147,6 +147,7 @@ class Register extends React.Component {
                             </Row>
                         </Col>
                     </Row>
+                    {/*
                     <Row style={{ paddingTop: 20 }}>
                         <Col xs={12} md={{ span: 6, offset: 3 }}>
                             <Form.Label style={formLabelStyle}>One click Register with</Form.Label>
@@ -163,6 +164,7 @@ class Register extends React.Component {
                             </Row>
                         </Col>
                     </Row>
+                    */}
                 </Form>
                 <Sweetalert confirmBtnText="I Understand" confirmBtnBsStyle="primary" title="Registration" show={this.state.RegisterAlertShow} onConfirm={this.handleRegisterAlertClose}>
                     {this.state.RegisterAlertText}
