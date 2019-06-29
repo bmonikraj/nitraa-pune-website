@@ -42,7 +42,8 @@ router.post('/', upload.single('ImageFile'), function (req, res, next) {
                       blogTitle: req.body.blogTitle,
                       blogDescription: req.body.blogDescription,
                       blogPostedby: req.body.blogPostedby,
-                      blogPostedDate: (new Date()).toDateString()
+                      blogPostedDate: (new Date()).toDateString(),
+                      comments: []
                     }, (err1, res1) => {
                       if(err1){
                         db.close();
@@ -102,6 +103,76 @@ router.post('/', upload.single('ImageFile'), function (req, res, next) {
   }
 });
 /*****************************************************Blog details upload ends***************************************************************/
+
+/*****************************************************Blog details upload Begins***************************************************************/
+router.post('/comments', function (req, res, next) {
+  jwt_token = req.get('authtoken');
+  if (jwt_token && jwt.verify(jwt_token, jwt_salt).tid){
+      var uid = jwt.verify(jwt_token, jwt_salt).tid;
+      mongo.connect(urlMongo, {useNewUrlParser : true}, function (err_mdbcon, db) {
+          if (err_mdbcon == null) {
+              dbo = db.db('nitraapune');
+              dbo.collection('users').findOne({ _id: ObjectID(uid)}, function (err_arr, res_auth){
+                console.log(res_auth);
+                if(err_arr){
+                  db.close();
+                  res.json({
+                    status: "fail",
+                    message: "Moderator authentication failed!"
+                  });
+                }
+                else{
+                  dbo.collection("blogs").findOne({_id: ObjectID(req.body.blogId)}, (err1, res1) => {
+                    if(err1){
+                      db.close();
+                      res.json({
+                        status: 'fail',
+                        message: 'Error inserting data'
+                      });
+                    }
+                    else{
+                      if(res1){
+                        let commentsList = res1.comments;
+                        let commentObject = {};
+                        commentObject.display_name = res_auth.name + "(" + res_auth.email + ")";
+                        let currentTimeStamp = new Date();
+                        commentObject.time = currentTimeStamp.toString().split(" ")[0] + ", " + currentTimeStamp.toString().split(" ")[1] + " " + currentTimeStamp.toString().split(" ")[2] + ", " + currentTimeStamp.toString().split(" ")[3] + ", " + currentTimeStamp.toString().split(" ")[4];
+                        commentObject.commentLine = req.body.commentLine;
+                        commentsList.unshift(commentObject);
+                        dbo.collection("blogs").updateOne({_id: ObjectID(req.body.blogId)}, {$set:{comments: commentsList}}, (err2, res2)=>{
+                          if(err2){
+                            db.close();
+                            res.json({status: "fail", message: "Unexpected Error Occured."});
+                          }
+                          else{
+                            db.close();
+                            res.json({status: "success", data: commentsList});
+                          }
+                        });
+                      }
+                      else{
+                        db.close();
+                        res.json({
+                          status: 'fail',
+                          message: 'No records found.'
+                        });
+                      }
+                    }
+                  });
+                }
+              });
+          }
+          else{
+              res.json({status: 'fail', message: 'Database connection failed'});
+          }
+      });
+  }
+  else{
+    res.json({status: 'fail', message: 'Token authentication failed'});
+  }
+});
+/*****************************************************Blog details upload ends***************************************************************/
+
 
 /*****************************************************Blog details get Begins******************************************************************/
 router.get('/', function (req, res, next) {

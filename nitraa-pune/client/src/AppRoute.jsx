@@ -19,6 +19,9 @@ import EventEditPane from './EventEditPane';
 import BlogEditPane from './BlogEditPane';
 import JobEditPane from './JobEditPane';
 import EventRegTable from './EventRegTable';
+import AboutUs from './AboutUs';
+import ExecCouncil from './ExecCouncil';
+import MembersDirectory from './MembersDirectory';
 
 class App extends React.Component{
     render(){
@@ -42,6 +45,9 @@ class App extends React.Component{
                 <Route exact={true} path='/blogPage' component={BlogDisplay} />
                 <Route exact={true} path='/blogs-list' component={BlogHandle} />
                 <Route exact={true} path='/registration-list' component={EventRegTable} />
+                <Route exact={true} path='/about-us' component={AboutUs} />
+                <Route exact={true} path='/executive-council' component={ExecCouncil} />
+                <Route exact={true} path='/members-dir' component={MembersDirectory} />
             </React.Fragment>
         )
     }

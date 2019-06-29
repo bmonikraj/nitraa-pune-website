@@ -30,10 +30,10 @@ class Home extends React.Component {
                                 width={non_mobile_dim.width}
                                 style={{ background: "#ffffff" }}
                             />
-                            <Carousel.Caption>
+                            {/*<Carousel.Caption>
                                 <h3>First slide label</h3>
                                 <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
-                            </Carousel.Caption>
+                            </Carousel.Caption>*/}
                         </Carousel.Item>
                         <Carousel.Item>
                             <ImageResizable
@@ -44,10 +44,10 @@ class Home extends React.Component {
                                 style={{ background: "#ffffff" }}
                             />
 
-                            <Carousel.Caption>
+                            {/*<Carousel.Caption>
                                 <h3>Second slide label</h3>
                                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                            </Carousel.Caption>
+                            </Carousel.Caption>*/}
                         </Carousel.Item>
                         <Carousel.Item>
                             <ImageResizable
@@ -58,10 +58,38 @@ class Home extends React.Component {
                                 style={{ background: "#ffffff" }}
                             />
 
-                            <Carousel.Caption>
+                            {/*<Carousel.Caption>
                                 <h3>Third slide label</h3>
                                 <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
-                            </Carousel.Caption>
+                            </Carousel.Caption>*/}
+                        </Carousel.Item>
+                        <Carousel.Item>
+                            <ImageResizable
+                                src={process.env.PUBLIC_URL + 'images/carousel/4.jpg'}
+                                alt="First slide"
+                                height={non_mobile_dim.height}
+                                width={non_mobile_dim.width}
+                                style={{ background: "#ffffff" }}
+                            />
+
+                            {/*<Carousel.Caption>
+                                <h3>Third slide label</h3>
+                                <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
+                            </Carousel.Caption>*/}
+                        </Carousel.Item>
+                        <Carousel.Item>
+                            <ImageResizable
+                                src={process.env.PUBLIC_URL + 'images/carousel/5.jpg'}
+                                alt="First slide"
+                                height={non_mobile_dim.height}
+                                width={non_mobile_dim.width}
+                                style={{ background: "#ffffff" }}
+                            />
+
+                            {/*<Carousel.Caption>
+                                <h3>Third slide label</h3>
+                                <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
+                            </Carousel.Caption>*/}
                         </Carousel.Item>
                     </Carousel>
                 </MediaQuery>
@@ -73,10 +101,10 @@ class Home extends React.Component {
                                 src={process.env.PUBLIC_URL + 'images/carousel/1.jpg'}
                                 alt="First slide"
                             />
-                            <Carousel.Caption>
+                            {/*<Carousel.Caption>
                                 <h3>First slide label</h3>
                                 <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
-                            </Carousel.Caption>
+                            </Carousel.Caption>*/}
                         </Carousel.Item>
                         <Carousel.Item>
                             <img
@@ -85,10 +113,10 @@ class Home extends React.Component {
                                 alt="Third slide"
                             />
 
-                            <Carousel.Caption>
+                            {/*<Carousel.Caption>
                                 <h3>Second slide label</h3>
                                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                            </Carousel.Caption>
+                            </Carousel.Caption>*/}
                         </Carousel.Item>
                         <Carousel.Item>
                             <img
@@ -97,10 +125,32 @@ class Home extends React.Component {
                                 alt="Third slide"
                             />
 
-                            <Carousel.Caption>
+                            {/*<Carousel.Caption>
                                 <h3>Third slide label</h3>
                                 <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
-                            </Carousel.Caption>
+                            </Carousel.Caption>*/}
+                        </Carousel.Item>
+                        <Carousel.Item>
+                            <img
+                                className="d-block w-100"
+                                src={process.env.PUBLIC_URL + 'images/carousel/4.jpg'}
+                                alt="First slide"
+                            />
+                            {/*<Carousel.Caption>
+                                <h3>First slide label</h3>
+                                <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+                            </Carousel.Caption>*/}
+                        </Carousel.Item>
+                        <Carousel.Item>
+                            <img
+                                className="d-block w-100"
+                                src={process.env.PUBLIC_URL + 'images/carousel/5.jpg'}
+                                alt="First slide"
+                            />
+                            {/*<Carousel.Caption>
+                                <h3>First slide label</h3>
+                                <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+                            </Carousel.Caption>*/}
                         </Carousel.Item>
                     </Carousel>
                 </MediaQuery>

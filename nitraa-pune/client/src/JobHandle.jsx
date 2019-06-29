@@ -226,6 +226,10 @@ class JobHandle extends React.Component {
             <Container>
               <Header/>
               <div style = {styleTableDiv}>
+                <div style = {{padding: '5px'}}>
+                  <a href="/add-job-details" style={{textDecoration: "none"}}><Button variant="outline-info">ADD A JOB OPPORTUNITY</Button></a>
+                </div>
+                <hr/>
                 <Row>
                   <Col>
                     <center><h2>Job Opportunities</h2></center>
@@ -244,9 +248,6 @@ class JobHandle extends React.Component {
                 <hr/>
                 <div style = {{padding: '5px'}}>
                   {elem2}
-                </div>
-                <div style = {{padding: '5px'}}>
-                  <a href="/add-job-details" style={{textDecoration: "none"}}><Button variant="outline-info">ADD A JOB OPPORTUNITY</Button></a>
                 </div>
               </div>
               <Footer/>
@@ -310,6 +311,10 @@ class JobHandle extends React.Component {
             <Container>
               <Header/>
               <div style = {styleTableDiv}>
+                <div style = {{padding: '5px'}}>
+                  <a href="/add-job-details" style={{textDecoration: "none"}}><Button variant="outline-info">ADD A JOB OPPORTUNITY</Button></a>
+                </div>
+                <hr/>
                 <Row>
                   <Col>
                     <center><h2>Job Opportunities</h2></center>
@@ -328,9 +333,6 @@ class JobHandle extends React.Component {
                 <hr/>
                 <div style = {{padding: '5px'}}>
                   <center style={{color: "grey"}}><h5>No Records found.</h5></center>
-                </div>
-                <div style = {{padding: '5px'}}>
-                  <a href="/add-job-details" style={{textDecoration: "none"}}><Button variant="outline-info">ADD A JOB OPPORTUNITY</Button></a>
                 </div>
               </div>
               <Footer/>

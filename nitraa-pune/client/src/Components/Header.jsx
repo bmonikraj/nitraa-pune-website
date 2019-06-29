@@ -104,11 +104,11 @@ class Header extends React.Component {
                         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                         <Navbar.Collapse id="responsive-navbar-nav">
                             <Nav className="mr-auto">
-                            <Nav.Link href="/bolo" style={itemStyle} >
+                            <Nav.Link href="/about-us" style={itemStyle} >
                                 <MaterialIcons icon="info"/>&nbsp;About Us
                             </Nav.Link>
-                            <Nav.Link href="#pricing" style={itemStyle}>
-                                <MaterialIcons icon="people"/>&nbsp;Community
+                            <Nav.Link href="/executive-council" style={itemStyle}>
+                                <MaterialIcons icon="people"/>&nbsp;Executive Council
                             </Nav.Link>
                             <Nav.Link href="/gallery" style={itemStyle}>
                                 <MaterialIcons icon="photo"/>&nbsp;Gallery
@@ -125,15 +125,15 @@ class Header extends React.Component {
                                 <NavDropdown.Item href="/jobs-list" style={itemStyle}>
                                     <MaterialIcons icon="school"/>&nbsp;Careers
                                 </NavDropdown.Item>
-                                <NavDropdown.Divider />
+                                {/*<NavDropdown.Divider />
                                 <NavDropdown.Item href="#action/3.3" style={itemStyle}>
                                     <MaterialIcons icon="attach_money"/>&nbsp;Benefit Projects
-                                </NavDropdown.Item>
+                                </NavDropdown.Item>*/}
                             </NavDropdown>
                             </Nav>
                             <Nav>
-                            <Nav.Link href="#deets" style={itemStyle}>
-                                <MaterialIcons icon="person_pin_circle"/>&nbsp;Alumni Nearby
+                            <Nav.Link href="/members-dir" style={itemStyle}>
+                                <MaterialIcons icon="perm_identity"/>&nbsp;Members Directory
                             </Nav.Link>
                             <Nav.Link href={this.state.profileURL} style={itemStyleProfile} ref="login_link">
                                 &nbsp;{this.state.profileTab}
