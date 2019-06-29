@@ -141,6 +141,7 @@ class AboutUs extends React.Component {
                                     <th>#</th>
                                     <th>Name</th>
                                     <th>DOB</th>
+                                    <th>YOP</th>
                                     <th>Email</th>
                                     <th>Mobile</th>
                                     <th>Temporary Address</th>
