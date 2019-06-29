@@ -155,6 +155,7 @@ class AboutUs extends React.Component {
                                         <td>{index + 1}</td>
                                         <td>{item.name}</td>
                                         <td>{item.dob}</td>
+                                          <td>{item.yop}</td>
                                         <td>{item.email}</td>
                                         <td>{item.phone}</td>
                                         <td>{item.address}</td>
