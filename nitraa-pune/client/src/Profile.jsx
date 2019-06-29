@@ -50,6 +50,7 @@ class Profile extends React.Component {
             sibl: "",
             chil: "",
             hobb: "",
+            yop: "",
             profile_pic_ext: null,
             removeBtnShow: "none",
             profile_pic_name: ""
@@ -144,6 +145,7 @@ class Profile extends React.Component {
                         siblings: response.data.data.siblings,
                         children: response.data.data.children,
                         hobbies: response.data.data.hobbies,
+                        yop:response.data.data.yop,
                         sibl: siblingText,
                         chil: childrenText,
                         hobb: hobbiesText,
@@ -173,6 +175,12 @@ class Profile extends React.Component {
     {
         console.log(event.target.value);
         this.setState({ date_of_birth: event.target.value.toString() });
+    }
+    
+    handleChangeYOP(event)
+    {
+        console.log(event.target.value);
+        this.setState({ yop: event.target.value.toString() });
     }
 
     handleChangePreAdr(event)
@@ -370,7 +378,8 @@ class Profile extends React.Component {
                     spouse_name: this.state.spouse,
                     children: this.state.children,
                     siblings: this.state.siblings,
-                    hobbies: this.state.hobbies
+                    hobbies: this.state.hobbies,
+                    yop: this.state.yop
                 }
             })
             .then(function(response){
@@ -458,6 +467,14 @@ class Profile extends React.Component {
                             <Form.Group controlId="ProfileDOB">
                                 <Form.Label style={formLabelStyle}>Date of Birth</Form.Label>
                                 <Form.Control type="date" value={this.state.date_of_birth} onChange={this.handleChangeDOB} />
+                            </Form.Group>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col xs={12} md={{ span: 6, offset: 3 }}>
+                            <Form.Group controlId="ProfileYOP">
+                                <Form.Label style={formLabelStyle}>Year of Passing</Form.Label>
+                                <Form.Control type="number" value={this.state.yop} onChange={this.handleChangeYOP} />
                             </Form.Group>
                         </Col>
                     </Row>
