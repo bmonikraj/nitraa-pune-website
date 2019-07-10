@@ -12,6 +12,7 @@ import axios from 'axios';
 import Header from './Components/Header';
 import Footer from './Components/Footer';
 import $ from 'jquery';
+import ReactDataGrid from 'react-data-grid';
 
 class AboutUs extends React.Component {
     constructor(props){
@@ -21,7 +22,11 @@ class AboutUs extends React.Component {
         responseArr: []
       }
     }
+    rowClicked(){
+      window.open("https://youtube.com");
+    }
     componentDidMount(){
+
       var _self = this;
       axios({
         method: "GET",
@@ -52,6 +57,19 @@ class AboutUs extends React.Component {
           background : "#eeeeee",
           padding: "10px"
       }
+      const columns = [
+        { key: 'id', name: '#',width: 100 },
+        { key: 'name', name: 'Name', width: 200 },
+        { key: 'DOB', name: 'DOB', width: 130 },
+        { key: 'YOP', name: 'YOP', width: 80 },
+        { key: 'Email', name: 'Email' , width: 220 },
+        { key: 'Mobile', name: 'Mobile' , width: 170 },
+        { key: 'TempAddr', name: 'Temporary Address' , width: 300, resizable:true },
+        { key: 'PerAddr', name: 'Permanent Address', width: 300, resizable:true },
+        { key: 'Spouse', name: 'Spouse' , width: 200},
+        { key: 'Children', name: 'Children', width: 300, resizable:true},
+        { key: 'Hobbies', name: 'Hobbies', width: 300, resizable:true },];
+
       if(this.state.responseFetched === 0){
         return (
             <Container>
@@ -123,6 +141,22 @@ class AboutUs extends React.Component {
               background : "#eeeeee",
               padding: "5px"
           }
+          let rows = [];
+          this.state.responseArr.map((item, index) => {
+                let tempObj = {id:"", name:"", DOB:"", YOP:"", Email:"", Mobile:"", TempAddr:"", PerAddr:"", Spouse:"", Children:"", Hobbies:"" };
+                tempObj['id'] = index+1;
+                tempObj['name'] = item.name;
+                tempObj['DOB'] = item.dob;
+                tempObj['YOP'] = item.yop;
+                tempObj['Email'] = item.email;
+                tempObj['Mobile'] = item.phone;
+                tempObj['TempAddr'] = item.address;
+                tempObj['PermAddr'] = item.permanent_adr;
+                tempObj['Spouse'] = item.spouse_name;
+                tempObj['Children'] = item.children;
+                tempObj['Hobbies'] = item.hobbies;
+                rows.push(tempObj);
+          });
           return (
               <Container>
                   <Header />
@@ -133,46 +167,12 @@ class AboutUs extends React.Component {
                           </Col>
                         </Row>
                         <hr/>
-                        <Row style ={{padding: "0.2rem", margin: "0"}}>
-                          <Col xs={12} style={{marginTop: "1rem", fontSize:"0.9rem", color: "#444", padding: "0"}}>
-                            <Table responsive striped bordered hover variant="light">
-                              <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Name</th>
-                                    <th>DOB</th>
-                                    <th>YOP</th>
-                                    <th>Email</th>
-                                    <th>Mobile</th>
-                                    <th>Temporary Address</th>
-                                    <th>Permanent Address</th>
-                                    <th>Spouse</th>
-                                    <th>Children</th>
-                                    <th>Hobbies</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {this.state.responseArr.map((item, index) => {
-                                  return(
-                                    <tr>
-                                        <td>{index + 1}</td>
-                                        <td>{item.name}</td>
-                                        <td>{item.dob}</td>
-                                          <td>{item.yop}</td>
-                                        <td>{item.email}</td>
-                                        <td>{item.phone}</td>
-                                        <td>{item.address}</td>
-                                        <td>{item.permanent_adr}</td>
-                                          <td>{item.spouse_name}</td>
-                                        <td>{item.children}</td>
-                                        <td>{item.hobbies}</td>
-                                    </tr>
-                                  );
-                                })}
-                              </tbody>
-                            </Table>
-                          </Col>
-                        </Row>
+                          <ReactDataGrid
+                          columns={columns}
+                          rowGetter={i => rows[i]}
+                          rowsCount={this.state.responseArr.length}
+                          onRowClick = {this.rowClicked.bind(this)}
+                          minHeight={150} />
                     </div>
                   <Footer />
               </Container>
