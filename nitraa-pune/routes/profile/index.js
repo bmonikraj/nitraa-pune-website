@@ -82,15 +82,12 @@ router.put('/update', function(req, res, next){
                         name: req.body.name,
                         address: req.body.address,
                         phone: req.body.phone,
-                        father: req.body.father,
-                        mother : req.body.mother,
-                        spouse_name: req.body.spouse_name,
-                        dob : req.body.dob,
-                        children: req.body.children,
+                        dob: req.body.dob,
                         permanent_adr: req.body.permanent_adr,
                         hobbies: req.body.hobbies,
-                        siblings: req.body.siblings,
-                        yop: req.body.yop
+                        yop: req.body.yop,
+                        branch: req.body.branch,
+                        organization: req.body.organization
                     }}, function(err1, res1){
                         if(err1)
                         {
@@ -146,6 +143,7 @@ router.post('/profilePicUpload', upload.single('ImageFile'), function (req, res,
                                 var fs = require('fs');
                                 fs.rename(req.file.path, "public/images/profile_pictures/"+DID+"."+EXT, function(err_upload){
                                     if (err_upload){
+                                        db.close();
                                         res.json({ status: 'fail', message: 'Error while moving file' });
                                     }
                                     else{
@@ -186,6 +184,7 @@ router.post('/profilePicUpload', upload.single('ImageFile'), function (req, res,
                                                 var fs = require('fs');
                                                 fs.rename(req.file.path, "public/images/profile_pictures/"+DID+"."+EXT, function(err_upload){
                                                     if (err_upload){
+                                                        db.close();
                                                         res.json({ status: 'fail', message: 'Error while moving file' });
                                                     }
                                                     else{
@@ -239,6 +238,7 @@ router.get('/ProfilePicRemove', function(req, res, next){
                         {
                             glob( path.join(uploadPath, res1._id.toString()) + ".*", function (err2, result2) {
                                 if (err2) {
+                                    db.close();
                                     res.json({
                                         status: "fail",
                                         message: "File search failed!"
@@ -248,6 +248,7 @@ router.get('/ProfilePicRemove', function(req, res, next){
                                     var fs = require('fs');
                                     fs.unlink(result2[0], function (err3, result3) {
                                         if (err3) {
+                                            db.close();
                                             res.json({
                                                 status: "fail",
                                                 message: "File search failed!"

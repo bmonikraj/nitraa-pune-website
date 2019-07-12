@@ -42,6 +42,34 @@ router.get('/', function (req, res, next) {
     }
 })
 
+router.get('/membership-reg', function (req, res, next) {
+    jwt_token = req.get('authtoken');
+    if (jwt_token && jwt.verify(jwt_token, jwt_salt).tid){
+        mongo.connect(mongourl, function (err_mdbcon, db) {
+            if (err_mdbcon == null) {
+                dbo = db.db('nitraapune');
+                dbo.collection('membership_plans').find({}).toArray(function (err_arr, array_res) {
+                    if (err_arr) {
+                        db.close();
+                        res.json({ status: 'fail', message: 'Error while fetching data from database' });
+                    }
+                    else {
+                        db.close();
+                        res.json({ status: 'success', data: array_res });
+                    }
+                })
+            }
+            else{
+                console.log(err_mdbcon);
+                res.json({status: 'fail', message: 'Database connection failed'});
+            }
+        })
+    }
+    else{
+        res.json({status: 'fail', message: 'Token authentication failed'});
+    }
+});
+
 router.post('/', function (req, res, next) {
     jwt_token = req.get('authtoken');
     if (jwt_token && jwt.verify(jwt_token, jwt_salt).tid){
@@ -69,6 +97,33 @@ router.post('/', function (req, res, next) {
     }
 })
 
+router.post('/membership-reg', function (req, res, next) {
+    jwt_token = req.get('authtoken');
+    if (jwt_token && jwt.verify(jwt_token, jwt_salt).tid){
+        mongo.connect(mongourl, function (err_mdbcon, db) {
+            if (err_mdbcon == null) {
+                dbo = db.db('nitraapune');
+                dbo.collection('membership_plans').insertOne({name : req.body.name, days : req.body.days, cost: req.body.cost, desc: req.body.desc},function (err_arr) {
+                    if (err_arr) {
+                        db.close();
+                        res.json({ status: 'fail', message: 'Error while inserting record into database' });
+                    }
+                    else {
+                        db.close();
+                        res.json({ status: 'success'});
+                    }
+                })
+            }
+            else{
+                res.json({status: 'fail', message: 'Database connection failed'});
+            }
+        })
+    }
+    else{
+        res.json({status: 'fail', message: 'Token authentication failed'});
+    }
+})
+
 router.delete('/', function (req, res, next) {
     jwt_token = req.get('authtoken');
     if (jwt_token && jwt.verify(jwt_token, jwt_salt).tid){
@@ -76,6 +131,33 @@ router.delete('/', function (req, res, next) {
             if (err_mdbcon == null) {
                 dbo = db.db('nitraapune');
                 dbo.collection('moderators').deleteOne({username:req.body.username},function (err_arr) {
+                    if (err_arr) {
+                        db.close();
+                        res.json({ status: 'fail', message: 'Error while deleting record from database' });
+                    }
+                    else {
+                        db.close();
+                        res.json({ status: 'success'});
+                    }
+                })
+            }
+            else{
+                res.json({status: 'fail', message: 'Database connection failed'});
+            }
+        })
+    }
+    else{
+        res.json({status: 'fail', message: 'Token authentication failed'});
+    }
+})
+
+router.delete('/membership-reg', function (req, res, next) {
+    jwt_token = req.get('authtoken');
+    if (jwt_token && jwt.verify(jwt_token, jwt_salt).tid){
+        mongo.connect(mongourl, function (err_mdbcon, db) {
+            if (err_mdbcon == null) {
+                dbo = db.db('nitraapune');
+                dbo.collection('membership_plans').deleteOne({_id: objectId(req.body.mpId)},function (err_arr) {
                     if (err_arr) {
                         db.close();
                         res.json({ status: 'fail', message: 'Error while deleting record from database' });

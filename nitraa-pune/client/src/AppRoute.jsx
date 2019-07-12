@@ -22,6 +22,7 @@ import EventRegTable from './EventRegTable';
 import AboutUs from './AboutUs';
 import ExecCouncil from './ExecCouncil';
 import MembersDirectory from './MembersDirectory';
+import EachMemberDetail from './EachMemberDetail';
 
 class App extends React.Component{
     render(){
@@ -48,6 +49,7 @@ class App extends React.Component{
                 <Route exact={true} path='/about-us' component={AboutUs} />
                 <Route exact={true} path='/executive-council' component={ExecCouncil} />
                 <Route exact={true} path='/members-dir' component={MembersDirectory} />
+                <Route exact={true} path='/memberPage' component={EachMemberDetail} />
             </React.Fragment>
         )
     }

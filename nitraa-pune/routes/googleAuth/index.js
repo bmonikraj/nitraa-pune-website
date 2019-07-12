@@ -74,14 +74,13 @@ router.post('/', (req, res, next) => {
                "idToken": profileObj.googleId,
                "address": "",
                "phone": "",
-               "father": "",
-               "mother" : "",
-               "spouse_name": "",
                "dob" : "",
-               "children": [],
-               "siblings": [],
                "permanent_adr": "",
                "hobbies": [],
+               "yop": "",
+               "branch": "",
+               "organization": "",
+               "due_timestamp": 0,
                "cover_pic_ext": null
              }, (err2,res2)=>{
                if(err2){

@@ -30,34 +30,50 @@ router.post('/', function (req, res, next) {
         "address": "",
         "type": "custom",
         "dob": "",
-        "yop":"",
-        "father" : "",
-        "mother" : "",
-        "spouse_name": "",
+        "yop": req.body.yop,
+        "branch": req.body.branch,
+        "organization": req.body.organization,
         "permanent_adr": "",
-        "children":[],
-        "siblings":[],
         "hobbies":[],
-        "cover_pic_ext": null
+        "cover_pic_ext": null,
+        "due_timestamp": 0
     }
     mongo.connect(urlMongo, function (err, db) {
         if (err == null) {
             var dbn = db.db("nitraapune");
-            dbn.collection("users").insertOne(data, (err, collection) => {
-                if (err) {
-                    db.close();
-                    res.json({
-                        status: "fail",
-                        message: "Error in signup!!"
-                    });
-                } else {
-                    db.close();
-                    res.json({
-                        status: "success",
-                        message: "Signup complete!!"
-                    });
+            dbn.collection("users").find({email: e_mail}).toArray(function(err1, res1){
+              if(err1){
+                db.close();
+                res.json({status: "fail", message: "Unexpected Error Occured"});
+              }
+              else{
+                if(res1.length === 0){
+                  dbn.collection("users").insertOne(data, (err2, res2) => {
+                      if (err2) {
+                          db.close();
+                          res.json({
+                              status: "fail",
+                              message: "Error in signup!!"
+                          });
+                      } else {
+                          db.close();
+                          res.json({
+                              status: "success",
+                              message: "Signup complete!!"
+                          });
+                      }
+                  });
                 }
+                else{
+                  db.close();
+                  res.json({
+                      status: "fail",
+                      message: "An account with this email already exists!"
+                  });
+                }
+              }
             });
+
         } else {
             db.close();
             res.json({

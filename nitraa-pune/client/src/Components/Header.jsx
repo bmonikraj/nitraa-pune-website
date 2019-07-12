@@ -42,24 +42,21 @@ class Header extends React.Component {
         }
 
         const itemStyleLogin = {
-            display:"inline-flex",
             verticleAlign:"middle",
             fontWeight: "bold",
-            display : localStorage.getItem('authtoken')?"none":"block"
+            display : localStorage.getItem('authtoken')?"none":"inline-flex"
         }
 
         const itemStyleProfile = {
-            display:"inline-flex",
             verticleAlign:"middle",
             fontWeight: "bold",
-            display : localStorage.getItem('authtoken')?"block":"none"
+            display : localStorage.getItem('authtoken')?"inline-flex":"none"
         }
 
         const itemStyleLogout = {
-            display:"inline-flex",
             verticleAlign:"middle",
             fontWeight: "bold",
-            display : localStorage.getItem('authtoken')?"block":"none"
+            display : localStorage.getItem('authtoken')?"inline-flex":"none"
         }
 
         function logoutFunc(){
@@ -110,36 +107,28 @@ class Header extends React.Component {
                             <Nav.Link href="/executive-council" style={itemStyle}>
                                 <MaterialIcons icon="people"/>&nbsp;Executive Council
                             </Nav.Link>
-                            <Nav.Link href="/gallery" style={itemStyle}>
+                            <Nav.Link href="/gallery" style={itemStyleLogout}>
                                 <MaterialIcons icon="photo"/>&nbsp;Gallery
                             </Nav.Link>
-                            <NavDropdown title="Initiatives" id="collasible-nav-dropdown" style={itemStyle}>
-                                <NavDropdown.Item href="/events-list" style={itemStyle}>
-                                    <MaterialIcons icon="event"/>&nbsp;Events
-                                </NavDropdown.Item>
-                                <NavDropdown.Divider />
-                                <NavDropdown.Item href="/blogs-list" style={itemStyle}>
-                                    <MaterialIcons icon="subtitles"/>&nbsp;Blogs
-                                </NavDropdown.Item>
-                                <NavDropdown.Divider />
-                                <NavDropdown.Item href="/jobs-list" style={itemStyle}>
-                                    <MaterialIcons icon="school"/>&nbsp;Careers
-                                </NavDropdown.Item>
-                                {/*<NavDropdown.Divider />
-                                <NavDropdown.Item href="#action/3.3" style={itemStyle}>
-                                    <MaterialIcons icon="attach_money"/>&nbsp;Benefit Projects
-                                </NavDropdown.Item>*/}
-                            </NavDropdown>
+                            <Nav.Link href="/events-list" style={itemStyleLogout}>
+                                <MaterialIcons icon="event"/>&nbsp;Events
+                            </Nav.Link>
+                            <Nav.Link href="/blogs-list" style={itemStyleLogout}>
+                                <MaterialIcons icon="subtitles"/>&nbsp;Blogs
+                            </Nav.Link>
+                            <Nav.Link href="/jobs-list" style={itemStyleLogout}>
+                                <MaterialIcons icon="school"/>&nbsp;Careers
+                            </Nav.Link>
                             </Nav>
                             <Nav>
-                            <Nav.Link href="/members-dir" style={itemStyle}>
+                            <Nav.Link href="/members-dir" style={itemStyleLogout}>
                                 <MaterialIcons icon="perm_identity"/>&nbsp;Members Directory
                             </Nav.Link>
                             <Nav.Link href={this.state.profileURL} style={itemStyleProfile} ref="login_link">
                                 &nbsp;{this.state.profileTab}
                             </Nav.Link>
                             <Nav.Link href="/login" style={itemStyleLogin} ref="login_link">
-                                &nbsp;Login
+                                <MaterialIcons icon="power_settings_new"/>&nbsp;Login
                             </Nav.Link>
                             <Nav.Link onClick={logoutFunc} style={itemStyleLogout} ref="logout_link">
                                 &nbsp;Logout

@@ -27,7 +27,8 @@ class BlogHandle extends React.Component {
 
   }
   componentDidMount(){
-    let _self_parent = this;
+    if(localStorage.getItem("authtoken")){
+      let _self_parent = this;
       axios({
         method: 'GET',
         url: '/blogs'
@@ -43,6 +44,10 @@ class BlogHandle extends React.Component {
         console.log(error);
         _self_parent.setState({responseFetched: 300});
       })
+    }
+    else{
+      this.setState({responseFetched: 404});
+    }
   }
 
   render() {
@@ -93,6 +98,33 @@ class BlogHandle extends React.Component {
               <Row style ={{padding: "1rem", margin: "0"}}>
                   <Col>
                     <center>Something Went Wrong. Please try again later..</center>
+                  </Col>
+              </Row>
+            </div>
+          <Footer/>
+        </Container>
+      )
+    }
+    else if(this.state.responseFetched === 404){
+      const styleTableDiv = {
+          marginTop : '15vh',
+          marginBottom : '15vh',
+          padding: "10px",
+          background: "#eee"
+      }
+      return(
+        <Container>
+          <Header/>
+            <div style = {styleTableDiv}>
+              <Row>
+                <Col>
+                <center><h2>Blogs</h2></center>
+                </Col>
+              </Row>
+              <hr/>
+              <Row style ={{padding: "1rem", margin: "0"}}>
+                  <Col>
+                    <center>Sorry! Not authorized to view this page..</center>
                   </Col>
               </Row>
             </div>

@@ -119,32 +119,39 @@ class ModeratorDashboard extends React.Component{
                 _self.handleModeratorAlertShow();
             }
             else{
-                const formdata = new FormData()
-                formdata.append("galleryImage", $("#gallery-file")[0].files[0])
-                formdata.append("caption", $("#gallery-caption").val())
-                axios({
-                    method : "post",
-                    url : "/moderator-gallery",
-                    headers : {
-                        authtoken:localStorage.getItem('authtoken'),
-                        'Content-Type': 'multipart/form-data'
-                    },
-                    data : formdata
-                })
-                .then(function(response){
-                    if(response.data.status === "success"){
-                        _self.setState({ModeratorAlertText : "Successfully Uploaded", ModeratorAlertStyle : "success"});
-                        _self.handleModeratorAlertShow();
-                        _self.fetchGallery();
-                    }
-                    else{
-                        _self.setState({ModeratorAlertText : response.data.message, ModeratorAlertStyle : "danger"});
-                        _self.handleModeratorAlertShow();
-                    }
-                })
-                .catch(function(error){
-                    console.log(error);
-                })
+                console.log($("#gallery-file")[0].files[0]);
+                if($("#gallery-file")[0].files[0].size <= 1048576 && ($("#gallery-file")[0].files[0].type ==="image/jpeg" || $("#gallery-file")[0].files[0].type ==="image/png")){
+                  const formdata = new FormData()
+                  formdata.append("galleryImage", $("#gallery-file")[0].files[0])
+                  formdata.append("caption", $("#gallery-caption").val())
+                  axios({
+                      method : "post",
+                      url : "/moderator-gallery",
+                      headers : {
+                          authtoken:localStorage.getItem('authtoken'),
+                          'Content-Type': 'multipart/form-data'
+                      },
+                      data : formdata
+                  })
+                  .then(function(response){
+                      if(response.data.status === "success"){
+                          _self.setState({ModeratorAlertText : "Successfully Uploaded", ModeratorAlertStyle : "success"});
+                          _self.handleModeratorAlertShow();
+                          _self.fetchGallery();
+                      }
+                      else{
+                          _self.setState({ModeratorAlertText : response.data.message, ModeratorAlertStyle : "danger"});
+                          _self.handleModeratorAlertShow();
+                      }
+                  })
+                  .catch(function(error){
+                      console.log(error);
+                  })
+                }
+                else{
+                  _self.setState({ModeratorAlertText : "File size should not exceed 1MB and should be either jpg/jpeg/png format", ModeratorAlertStyle : "danger"})
+                  _self.handleModeratorAlertShow();
+                }
             }
         })
 

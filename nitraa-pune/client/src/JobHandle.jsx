@@ -41,43 +41,48 @@ class JobHandle extends React.Component {
   }
   componentDidMount(){
     let _self_parent = this;
-    if(localStorage.getItem('authtoken') && localStorage.getItem('profile') === 'user'){
-      this.setState({userLoggedIn: 1});
-      axios({
-        method: 'GET',
-        url: '/jobs',
-        headers: {
-          authtoken: localStorage.getItem('authtoken')
-        }
-      }).then((response) => {
-        console.log(response);
-        if(response.data.status === "success"){
-          _self_parent.setState({jobListArray: response.data.data, jobEditableList: response.data.data2, responseFetched: 1});
-        }
-        else{
+    if(localStorage.getItem('authtoken')){
+      if(localStorage.getItem('profile') === 'user'){
+        this.setState({userLoggedIn: 1});
+        axios({
+          method: 'GET',
+          url: '/jobs',
+          headers: {
+            authtoken: localStorage.getItem('authtoken')
+          }
+        }).then((response) => {
+          console.log(response);
+          if(response.data.status === "success"){
+            _self_parent.setState({jobListArray: response.data.data, jobEditableList: response.data.data2, responseFetched: 1});
+          }
+          else{
+            _self_parent.setState({responseFetched: 300});
+          }
+        }).catch((error) => {
           _self_parent.setState({responseFetched: 300});
-        }
-      }).catch((error) => {
-        _self_parent.setState({responseFetched: 300});
-        console.log(error);
-      })
+          console.log(error);
+        })
+      }
+      else{
+        axios({
+          method: 'GET',
+          url: '/jobs'
+        }).then((response) => {
+          console.log(response);
+          if(response.data.status === "success"){
+            _self_parent.setState({jobListArray: response.data.data, responseFetched: 1});
+          }
+          else{
+            _self_parent.setState({responseFetched: 300});
+          }
+        }).catch((error) => {
+          _self_parent.setState({responseFetched: 300});
+          console.log(error);
+        })
+      }
     }
     else{
-      axios({
-        method: 'GET',
-        url: '/jobs'
-      }).then((response) => {
-        console.log(response);
-        if(response.data.status === "success"){
-          _self_parent.setState({jobListArray: response.data.data, responseFetched: 1});
-        }
-        else{
-          _self_parent.setState({responseFetched: 300});
-        }
-      }).catch((error) => {
-        _self_parent.setState({responseFetched: 300});
-        console.log(error);
-      })
+      this.setState({responseFetched: 404});
     }
   }
 
@@ -169,8 +174,28 @@ class JobHandle extends React.Component {
                 <center><h2>Job Opportunities</h2></center>
               </Col>
             </Row>
+            <hr/>
             <div style = {{padding: '5px'}}>
               <center><h4>Loading ...</h4></center>
+            </div>
+          </div>
+          <Footer/>
+        </Container>
+      )
+    }
+    else if(this.state.responseFetched === 404){
+      return(
+        <Container>
+          <Header/>
+          <div style = {styleTableDiv}>
+            <Row>
+              <Col>
+                <center><h2>Job Opportunities</h2></center>
+              </Col>
+            </Row>
+            <hr/>
+            <div style = {{padding: '5px'}}>
+              <center><h4>Sorry! Not authorized to view this page..</h4></center>
             </div>
           </div>
           <Footer/>
@@ -187,6 +212,7 @@ class JobHandle extends React.Component {
                 <center><h2>Job Opportunities</h2></center>
               </Col>
             </Row>
+            <hr/>
             <div style = {{padding: '5px'}}>
               <center><h4>Something went wrong! Please try again..</h4></center>
             </div>
