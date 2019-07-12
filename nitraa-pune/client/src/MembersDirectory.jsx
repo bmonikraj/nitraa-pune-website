@@ -13,7 +13,7 @@ import Header from './Components/Header';
 import Footer from './Components/Footer';
 import $ from 'jquery';
 
-class AboutUs extends React.Component {
+class MembersDirectory extends React.Component {
     constructor(props){
       super(props);
       this.state = {
@@ -22,28 +22,35 @@ class AboutUs extends React.Component {
       }
     }
     componentDidMount(){
-      var _self = this;
-      axios({
-        method: "GET",
-        url: "/members-directory"
-      }).then(response => {
-        if(response.data.status === "success"){
-          _self.setState({
-            responseFetched: 1,
-            responseArr: response.data.data
-          });
-        }
-        else{
+      if(localStorage.getItem('authtoken')){
+        var _self = this;
+        axios({
+          method: "GET",
+          url: "/members-directory"
+        }).then(response => {
+          if(response.data.status === "success"){
+            _self.setState({
+              responseFetched: 1,
+              responseArr: response.data.data
+            });
+          }
+          else{
+            _self.setState({
+              responseFetched: 300
+            });
+          }
+        }).catch(error => {
+          console.log(error);
           _self.setState({
             responseFetched: 300
           });
-        }
-      }).catch(error => {
-        console.log(error);
-        _self.setState({
-          responseFetched: 300
         });
-      });
+      }
+      else{
+        this.setState({
+          responseFetched: 404
+        });
+      }
     }
     render() {
       var styleTableDiv = {
@@ -87,6 +94,27 @@ class AboutUs extends React.Component {
                       <Row style ={{padding: "1rem", margin: "0"}}>
                         <Col xs={12} style={{marginTop: "1rem", fontSize:"0.9rem", color: "#444"}}>
                           <center><h5>Something went wrong! Please try again later..</h5></center>
+                        </Col>
+                      </Row>
+                  </div>
+                <Footer />
+            </Container>
+        );
+      }
+      else if(this.state.responseFetched === 404){
+        return (
+            <Container>
+                <Header />
+                  <div style = {styleTableDiv}>
+                      <Row>
+                        <Col style={{color: "#444"}}>
+                          <center><h3><b>MEMBERS DIRECTORY</b></h3></center>
+                        </Col>
+                      </Row>
+                      <hr/>
+                      <Row style ={{padding: "1rem", margin: "0"}}>
+                        <Col xs={12} style={{marginTop: "1rem", fontSize:"0.9rem", color: "#444"}}>
+                          <center><h5>Sorry! Not Authorized for viewing this page..</h5></center>
                         </Col>
                       </Row>
                   </div>
@@ -182,4 +210,4 @@ class AboutUs extends React.Component {
     }
 }
 
-export default AboutUs;
+export default MembersDirectory;

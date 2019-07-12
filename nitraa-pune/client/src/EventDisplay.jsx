@@ -37,7 +37,8 @@ class EventDisplay extends React.Component {
           AlertTitle:"",
           AlertStyle: "danger",
           AlertConfirmButton: "I Understand",
-          DeleteConfirmShow: false
+          DeleteConfirmShow: false,
+          paid: true
         }
         this.handleAlertShow=this.handleAlertShow.bind(this);
     }
@@ -52,6 +53,15 @@ class EventDisplay extends React.Component {
         this.setState({
           id: params.eid
         });
+      }
+      if(params.message){
+        this.setState({
+          AlertText: params.message,
+          AlertTitle: params.title,
+          AlertStyle: "success",
+          AlertConfirmButton: "OK"
+        });
+        this.handleAlertShow();
       }
 
       if(localStorage.getItem("authtoken")){
@@ -69,7 +79,8 @@ class EventDisplay extends React.Component {
           }).then(response => {
             if(response.data.status === "success"){
               _self.setState({
-                registered: response.data.data
+                registered: response.data.data,
+                payment_status: response.data.payment_status
               });
             }
           }).catch(error => {
@@ -185,8 +196,13 @@ class EventDisplay extends React.Component {
       this.setState({
         AlertShow: false
       });
-      if(this.state.AlertStyle === "success" && this.state.AlertTitle === "Event Details"){
-        window.open("/events-list", "_self");
+      if(this.state.AlertStyle === "success"){
+        if(this.state.profile === "user"){
+          window.open("/eventPage?eid="+this.state.id, "_self");
+        }
+        else{
+          window.open("/events-list", "_self");
+        }
       }
     }
     register(){
@@ -244,7 +260,7 @@ class EventDisplay extends React.Component {
       }).then(response=>{
         if(response.data.status === "success"){
           _self.setState({
-            AlertText: "Successfully Unregistered.",
+            AlertText: response.data.message,
             AlertTitle: "Event Registration",
             AlertStyle: "success",
             AlertConfirmButton: "OK",
@@ -254,7 +270,7 @@ class EventDisplay extends React.Component {
         }
         else{
           _self.setState({
-            AlertText: response.data.message,
+            AlertText: "Unexpected Error Occured",
             AlertTitle: "Event Registration",
             AlertStyle: "danger",
             AlertConfirmButton: "I Understand"
@@ -263,13 +279,48 @@ class EventDisplay extends React.Component {
         }
       }).catch(error => {
         _self.setState({
-          AlertText: "An Unexpected Error Occured.",
+          AlertText: "Unexpected Error Occured",
           AlertTitle: "Event Registration",
           AlertStyle: "danger",
           AlertConfirmButton: "I Understand"
         });
         _self.handleAlertShow();
       });
+    }
+    payRegFees(){
+      let _self = this;
+      axios({
+        method: "post",
+        url: "/event-reg/payment",
+        data: {
+          eventId: this.state.id,
+          regFees: this.state.regFees
+        },
+        headers: {
+          authtoken: localStorage.getItem("authtoken")
+        }
+      }).then(response => {
+        if(response.data.status === "success"){
+          window.open(response.data.longURL, "_self");
+        }
+        else{
+          _self.setState({
+            AlertText: "An Unexpected Error Occured.",
+            AlertTitle: "Payment details",
+            AlertStyle: "danger",
+            AlertConfirmButton: "I Understand"
+          });
+          _self.handleAlertShow();
+        }
+      }).catch(error => {
+        _self.setState({
+          AlertText: "An Unexpected Error Occured.",
+          AlertTitle: "Payment details",
+          AlertStyle: "danger",
+          AlertConfirmButton: "I Understand"
+        });
+        _self.handleAlertShow();
+      })
     }
     render() {
 
@@ -340,7 +391,8 @@ class EventDisplay extends React.Component {
           else{
             elem2 = (
               <Row>
-                <Col xs={12} md={9}></Col>
+                <Col xs={12} md={7}></Col>
+                {(this.state.registered && !this.state.payment_status)?<Col xs={12} md={2} style={{padding: "0.2rem 1rem"}}><Button variant="outline-success" onClick={this.payRegFees.bind(this)} block>Pay Now</Button></Col>:<Col xs={12} md={2}></Col>}
                 {this.state.registered?<Col xs={12} md={2} style={{padding: "0.2rem 1rem"}}><Button variant="outline-success" onClick={this.unregister.bind(this)} block>Unregister</Button></Col>:<Col xs={12} md={2} style={{padding: "0.2rem 1rem"}}><Button variant="outline-info" onClick={this.register.bind(this)} block>Register</Button></Col>}
               </Row>
             );

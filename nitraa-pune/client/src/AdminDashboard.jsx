@@ -20,14 +20,19 @@ class AdminDashboard extends React.Component{
         this.handleLoginAlertOpen = this.handleLoginAlertOpen.bind(this);
         this.handleLoginAlertClose = this.handleLoginAlertClose.bind(this);
         this.fetchRow = this.fetchRow.bind(this);
+        this.fetchMembershipPlanRow = this.fetchMembershipPlanRow.bind(this);
         this.clearAddInput = this.clearAddInput.bind(this);
+        this.clearAddInputMP = this.clearAddInputMP.bind(this);
         this.addRow = this.addRow.bind(this);
+        this.addMembershipPlanRow = this.addMembershipPlanRow.bind(this);
         this.removeRow = this.removeRow.bind(this);
+        this.removeMembershipPlanRow = this.removeMembershipPlanRow.bind(this);
         this.state = {
             table_data : [],
+            membershipPlanArr: [],
             loginAlertShow : false,
             loginAlertText : ""
-        }        
+        }
     }
 
     handleLoginAlertOpen(){
@@ -40,6 +45,7 @@ class AdminDashboard extends React.Component{
 
     componentDidMount(){
         this.fetchRow();
+        this.fetchMembershipPlanRow();
     }
 
     fetchRow(){
@@ -66,6 +72,30 @@ class AdminDashboard extends React.Component{
         });
     }
 
+    fetchMembershipPlanRow(){
+      var _self = this;
+      axios({
+          url : '/admin-moderator-crud/membership-reg',
+          method : 'get',
+          headers : {
+              authtoken:localStorage.getItem('authtoken')
+          }
+      })
+      .then(function(response){
+          console.log(response);
+          if(response.data.status == 'success'){
+              _self.setState({membershipPlanArr : response.data.data});
+          }
+          else{
+              _self.setState({loginAlertText : response.data.message});
+              _self.handleLoginAlertOpen();
+          }
+      })
+      .catch(function(error){
+          console.log(error);
+      });
+    }
+
     addRow(){
         var _self = this;
         axios({
@@ -89,6 +119,37 @@ class AdminDashboard extends React.Component{
             }
             else{
                 _self.setState({loginAlertText : response.data.message});
+                _self.handleLoginAlertOpen();
+            }
+        })
+        .catch(function(error){
+            console.log(error);
+        });
+    }
+
+    addMembershipPlanRow(){
+        var _self = this;
+        axios({
+            url : '/admin-moderator-crud/membership-reg',
+            method : 'post',
+            headers : {
+                authtoken:localStorage.getItem('authtoken')
+            },
+            data : {
+                name : _self.membershipPlanName.value,
+                days : _self.membershipPlanDays.value,
+                cost : _self.membershipPlanCost.value,
+                desc : _self.membershipPlanDesc.value
+            }
+        })
+        .then(function(response1){
+            console.log(response1);
+            if(response1.data.status == 'success'){
+                _self.fetchMembershipPlanRow();
+                _self.clearAddInputMP();
+            }
+            else{
+                _self.setState({loginAlertText : response1.data.message});
                 _self.handleLoginAlertOpen();
             }
         })
@@ -132,9 +193,44 @@ class AdminDashboard extends React.Component{
         });
     }
 
+    removeMembershipPlanRow(element){
+        var _self = this;
+        console.log(element.target);
+        var _element_value = element.target.value;
+        axios({
+            url : '/admin-moderator-crud/membership-reg',
+            method : 'delete',
+            headers : {
+                authtoken:localStorage.getItem('authtoken')
+            },
+            data : {
+                mpId : _element_value
+            }
+        })
+        .then(function(response1){
+            console.log(response1);
+            if(response1.data.status == 'success'){
+                _self.fetchMembershipPlanRow();
+            }
+            else{
+                _self.setState({loginAlertText : response1.data.message});
+                _self.handleLoginAlertOpen();
+            }
+        })
+        .catch(function(error){
+            console.log(error);
+        });
+    }
+
     clearAddInput(){
         this.usernameInput.value = "";
         this.passwordInput.value = "";
+    }
+    clearAddInputMP(){
+        this.membershipPlanName.value = "";
+        this.membershipPlanDays.value = "";
+        this.membershipPlanCost.value = "";
+        this.membershipPlanDesc.value = "";
     }
 
     render(){
@@ -143,12 +239,16 @@ class AdminDashboard extends React.Component{
 
         const styleTableDiv = {
             paddingTop : '15vh',
+            paddingBottom : '1vh'
+        }
+        const styleTableDiv2 = {
+            paddingTop : '1vh',
             paddingBottom : '15vh'
         }
         const styleTable = {
             background : "#eeeeee"
         }
-        
+
         return(
             <Container>
                 <Header/>
@@ -167,13 +267,47 @@ class AdminDashboard extends React.Component{
                             <td><Button variant="outline-success" onClick={this.addRow}>Add</Button></td>
                         </tr>
                         {
-                            this.state.table_data.map(function(row, index){                                
+                            this.state.table_data.map(function(row, index){
                                 return (
                                     <tr key={row.username}>
                                         <td>{index+1}</td>
                                         <td>{row.username}</td>
                                         <td>{row.password}</td>
                                         <td><Button variant="outline-danger" value={row.username} onClick={_p.removeRow}>Remove</Button></td>
+                                    </tr>
+                                )
+                            })
+                        }
+                    </Table>
+                </div>
+                <div style={styleTableDiv2}>
+                    <Table style={styleTable} responsive bordered striped variant="light">
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Days</th>
+                            <th>Cost</th>
+                            <th>Description</th>
+                            <th><Button variant="link" onClick={this.clearAddInputMP}><MaterialIcons icon="backspace" /></Button></th>
+                        </tr>
+                        <tr>
+                            <td>Add Membership Plans</td>
+                            <td><Form.Group controlId="formBasicText"><Form.Control placeholder="Name" ref={nameIP => this.membershipPlanName = nameIP}/></Form.Group></td>
+                            <td><Form.Group controlId="formBasicText"><Form.Control type="number" placeholder="Days" ref={daysIP => this.membershipPlanDays = daysIP}/><Form.Text>Put <b>-1</b> for lifetime access</Form.Text></Form.Group></td>
+                            <td><Form.Group controlId="formBasicText"><Form.Control type="number" placeholder="Cost" ref={costIP => this.membershipPlanCost = costIP}/></Form.Group></td>
+                            <td><Form.Group controlId="formBasicText"><Form.Control as="textarea" placeholder="Description" ref={descIP => this.membershipPlanDesc = descIP}/></Form.Group></td>
+                            <td><Button variant="outline-success" onClick={this.addMembershipPlanRow}>Add</Button></td>
+                        </tr>
+                        {
+                            this.state.membershipPlanArr.map(function(row, index){
+                                return (
+                                    <tr key={row._id}>
+                                        <td>{index+1}</td>
+                                        <td>{row.name}</td>
+                                        <td>{row.days}</td>
+                                        <td>{row.cost}</td>
+                                        <td>{row.desc}</td>
+                                        <td><Button variant="outline-danger" value={row._id} onClick={_p.removeMembershipPlanRow}>Remove</Button></td>
                                     </tr>
                                 )
                             })

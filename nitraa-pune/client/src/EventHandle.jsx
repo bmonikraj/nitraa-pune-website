@@ -26,23 +26,30 @@ class EventHandle extends React.Component {
 
   }
   componentDidMount(){
-    let _self_parent = this;
-    axios({
-      method: 'GET',
-      url: '/events'
-    }).then((response) => {
-      console.log(response);
-      if(response.data.status === "success"){
-        _self_parent.setState({eventListArray: response.data.data, responseFetched: 1});
-        console.log(response.data.data);
-      }
-      else{
+    if(localStorage.getItem("authtoken")){
+      let _self_parent = this;
+      axios({
+        method: 'GET',
+        url: '/events'
+      }).then((response) => {
+        console.log(response);
+        if(response.data.status === "success"){
+          _self_parent.setState({eventListArray: response.data.data, responseFetched: 1});
+          console.log(response.data.data);
+        }
+        else{
+          _self_parent.setState({responseFetched: 300});
+        }
+      }).catch((error) => {
         _self_parent.setState({responseFetched: 300});
-      }
-    }).catch((error) => {
-      _self_parent.setState({responseFetched: 300});
-      console.log(error);
-    })
+        console.log(error);
+      })
+    }
+    else{
+      this.setState({
+        responseFetched: 404
+      })
+    }
   }
   render(){
     if(this.state.responseFetched){
@@ -121,6 +128,18 @@ class EventHandle extends React.Component {
             <Header/>
                 <Row style={{margin: "20vh 0 0", padding: 0, fontFamily: "Lato"}}>
                   <h4 style={{color: "white"}}>Something went wrong! Please try again..</h4>
+                </Row>
+            <Footer/>
+          </Container>
+        );
+      }
+      else if(this.state.responseFetched === 404){
+        //something went wrong
+        return(
+          <Container>
+            <Header/>
+                <Row style={{margin: "20vh 0 0", padding: 0, fontFamily: "Lato"}}>
+                  <h4 style={{color: "white"}}>Sorry! Not Authorized to view this page..</h4>
                 </Row>
             <Footer/>
           </Container>

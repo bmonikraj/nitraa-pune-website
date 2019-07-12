@@ -23,7 +23,9 @@ class LoginPage extends React.Component {
         this.handleLoginAlertOpen = this.handleLoginAlertOpen.bind(this);
         this.state = {
             loginAlertShow: false,
-            loginAlertText: ""
+            loginAlertText: "",
+            loginAlertType: "danger",
+            loginAlertConfirmButton: "I Understand"
         }
     }
 
@@ -34,7 +36,9 @@ class LoginPage extends React.Component {
         {
             this.setState({
                 loginAlertShow: true,
-                loginAlertText: params.message
+                loginAlertType: "danger",
+                loginAlertText: params.message,
+                loginAlertConfirmButton: "I Understand"
             });
         }
     }
@@ -45,8 +49,9 @@ class LoginPage extends React.Component {
 
     handleLoginAlertClose() {
         this.setState({ loginAlertShow: false });
-        this.email.value = "";
-        this.password.value = "";
+        if(this.state.loginAlertType === "success"){
+          window.open("/", "_self");
+        }
     }
 
     handleLogin(event) {
@@ -65,17 +70,19 @@ class LoginPage extends React.Component {
                     })
                         .then(function (response) {
                             if (response.data.status == 'success') {
-
-                                window.open("/", "_self");
                                 localStorage.setItem('authtoken', response.headers.authtoken);
                                 localStorage.setItem('profile', 'admin');
+                                _self_parent.setState({ loginAlertText: "Successfully Logged In", loginAlertType: "success", loginAlertConfirmButton: "OK"});
+                                _self_parent.handleLoginAlertOpen();
                             }
                             else {
-                                _self_parent.setState({ loginAlertText: response.data.message });
+                                _self_parent.setState({ loginAlertText: response.data.message, loginAlertType: "danger", loginAlertConfirmButton: "I Understand" });
                                 _self_parent.handleLoginAlertOpen();
                             }
                         })
                         .catch(function (error) {
+                            _self_parent.setState({ loginAlertText: "Unexpected error occured", loginAlertType: "danger", loginAlertConfirmButton: "I Understand" });
+                            _self_parent.handleLoginAlertOpen();
                             console.log(error);
                         });
                 }
@@ -91,17 +98,19 @@ class LoginPage extends React.Component {
                     })
                         .then(function (response) {
                             if (response.data.status == 'success') {
-
-                                window.open("/", "_self");
                                 localStorage.setItem('authtoken', response.headers.authtoken);
                                 localStorage.setItem('profile', 'moderator');
+                                _self_parent.setState({ loginAlertText: "Successfully Logged In", loginAlertType: "success", loginAlertConfirmButton: "OK"});
+                                _self_parent.handleLoginAlertOpen();
                             }
                             else {
-                                _self_parent.setState({ loginAlertText: response.data.message });
-                                _self_parent.handleLoginAlertOpen();
+                              _self_parent.setState({ loginAlertText: response.data.message, loginAlertType: "danger", loginAlertConfirmButton: "I Understand" });
+                              _self_parent.handleLoginAlertOpen();
                             }
                         })
                         .catch(function (error) {
+                            _self_parent.setState({ loginAlertText: "Unexpected error occured", loginAlertType: "danger", loginAlertConfirmButton: "I Understand" });
+                            _self_parent.handleLoginAlertOpen();
                             console.log(error);
                         });
                 }
@@ -118,17 +127,19 @@ class LoginPage extends React.Component {
                 })
                     .then(function (response) {
                         if (response.data.status == 'success') {
-
-                            window.open("/", "_self");
                             localStorage.setItem('authtoken', response.headers.authtoken);
                             localStorage.setItem('profile', 'user');
+                            _self_parent.setState({ loginAlertText: "Successfully Logged In", loginAlertType: "success", loginAlertConfirmButton: "OK"});
+                            _self_parent.handleLoginAlertOpen();
                         }
                         else {
-                            _self_parent.setState({ loginAlertText: response.data.message });
-                            _self_parent.handleLoginAlertOpen();
+                          _self_parent.setState({ loginAlertText: response.data.message, loginAlertType: "danger", loginAlertConfirmButton: "I Understand" });
+                          _self_parent.handleLoginAlertOpen();
                         }
                     })
                     .catch(function (error) {
+                        _self_parent.setState({ loginAlertText: "Unexpected error occured", loginAlertType: "danger", loginAlertConfirmButton: "I Understand" });
+                        _self_parent.handleLoginAlertOpen();
                         console.log(error);
                     });
             }
@@ -162,15 +173,17 @@ class LoginPage extends React.Component {
             if(response.data.status === 'success'){
               localStorage.setItem('authtoken', response.headers.authtoken);
               localStorage.setItem('profile', 'user');
-              window.open("/", "_self");
+              _self.setState({ loginAlertText: "Successfully Logged In", loginAlertType: "success", loginAlertConfirmButton: "OK"});
+              _self.handleLoginAlertOpen();
+
             }
             else{
-              _self.setState({ loginAlertText: response.data.message });
+              _self.setState({ loginAlertText: response.data.message, loginAlertType: "danger", loginAlertConfirmButton: "I Understand" });
               _self.handleLoginAlertOpen();
             }
         }).catch(error=>{
-          _self.setState({ loginAlertText: "Sorry! Unexpected Error." });
-          _self.handleLoginAlertOpen();
+            _self.setState({ loginAlertText: "Unexpected error occured", loginAlertType: "danger", loginAlertConfirmButton: "I Understand" });
+            _self.handleLoginAlertOpen();
         });
       }
     }
@@ -229,12 +242,12 @@ class LoginPage extends React.Component {
                             </Row>
                         </Col>
                     </Row>
-                    {/*<Row style={{ paddingTop: 20 }}>
+                    <Row style={{ paddingTop: 20 }}>
                         <Col xs={12} md={{ span: 6, offset: 3 }}>
                             <Form.Label style={formLabelStyle}>One click login with</Form.Label>
                             <Row>
                                 <Col>
-                                  <FacebookProvider appId="1818911678412891">
+                                  <FacebookProvider appId="402065750608440">
                                     <Login
                                       scope="name,email,picture"
                                       onResponse={this.handleResponseFacebook.bind(this)}
@@ -254,16 +267,14 @@ class LoginPage extends React.Component {
                                     onSuccess={this.responseGoogle.bind(this)} onFailure={this.responseGoogle.bind(this)}
                                     cookiePolicy={'single_host_origin'}
                                   />
-
                                 </Col>
-                                <Col>
-                                    <SocialIcon url="http://localhost:3001/auth/linkedin" network="linkedin" bgColor="#ffffff" />
-                                </Col>
+                                <Col></Col>
+                                <Col></Col>
                             </Row>
                         </Col>
-                    </Row>*/}
+                    </Row>
                 </Form>
-                <Sweetalert danger confirmBtnText="I Understand" confirmBtnBsStyle="primary" title="Authentication Error" show={this.state.loginAlertShow} onConfirm={this.handleLoginAlertClose}>
+                <Sweetalert type={this.state.loginAlertType} confirmBtnText={this.state.loginAlertConfirmButton} confirmBtnBsStyle="primary" title="Account Sign In" show={this.state.loginAlertShow} onConfirm={this.handleLoginAlertClose}>
                     {this.state.loginAlertText}
                 </Sweetalert>
                 <Footer />
