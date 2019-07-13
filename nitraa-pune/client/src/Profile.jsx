@@ -549,10 +549,10 @@ class Profile extends React.Component {
         }
         else{
           if(this.state.reg_due_stamp - new Date().getTime() > 0){
-            elem3 = <center><h4>Membership Plan Active till {(new Date(this.state.reg_due_stamp)).toDateString()}.</h4></center>;
+            elem3 = <center><h4>Membership Plan <span style={{color:"green"}}>Active</span> till {(new Date(this.state.reg_due_stamp)).toDateString()}.</h4></center>;
           }
           else{
-            elem3 = <center><h4>Membership Plan Expired. Choose a Plan.</h4></center>;
+            elem3 = <center><h4>Membership Plan <span style={{color:"red"}}>Expired</span>. Choose a Plan.</h4></center>;
           }
         }
         return (

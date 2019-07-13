@@ -95,6 +95,10 @@ class ExecCouncil extends React.Component {
                         <center><h4><b>MEMBERS EC</b></h4></center>
                         <hr/>
                         <div style={{marginTop: "0.5rem"}}>
+                          <center style={{fontSize: "1rem", color: "#444"}}><b>MONIK RAJ BEHERA</b></center>
+                          <center style={{fontSize: "0.8rem", color: "grey"}}>bmonikraj@gmail.com / +91-8847891294</center>
+                        </div>
+                        <div style={{marginTop: "0.5rem"}}>
                           <center style={{fontSize: "1rem", color: "#444"}}><b>AMRUTHA VARSHINI</b></center>
                           <center style={{fontSize: "0.8rem", color: "grey"}}>amruthavarshinimahankali@gmail.com / +91-7205210640</center>
                         </div>

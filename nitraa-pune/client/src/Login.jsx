@@ -158,7 +158,7 @@ class LoginPage extends React.Component {
     responseGoogle(res){
       if(res.error || !res.profileObj){
         this.setState({ loginAlertText: "Sorry! Unexpected Error." });
-        this.handleLoginAlertOpen();
+        //this.handleLoginAlertOpen();
       }
       else{
         var _self = this;
@@ -244,7 +244,7 @@ class LoginPage extends React.Component {
                     </Row>
                     <Row style={{ paddingTop: 20 }}>
                         <Col xs={12} md={{ span: 6, offset: 3 }}>
-                            <Form.Label style={formLabelStyle}>One click login with</Form.Label>
+                            {/* <Form.Label style={formLabelStyle}>One click login with</Form.Label> */}
                             <Row>
                                 {/*<Col>
                                   <FacebookProvider appId="402065750608440">
@@ -257,7 +257,7 @@ class LoginPage extends React.Component {
                                     />
                                   </FacebookProvider>
                                 </Col>*/}
-                                <Col>
+                                {/* <Col>
                                   <GoogleLogin
                                     clientId="852876963227-2h0cv9040sjn5567bdh43ejrg364jt6p.apps.googleusercontent.com"
                                     autoLoad={false}
@@ -267,7 +267,7 @@ class LoginPage extends React.Component {
                                     onSuccess={this.responseGoogle.bind(this)} onFailure={this.responseGoogle.bind(this)}
                                     cookiePolicy={'single_host_origin'}
                                   />
-                                </Col>
+                                </Col> */}
                                 <Col></Col>
                                 <Col></Col>
                             </Row>

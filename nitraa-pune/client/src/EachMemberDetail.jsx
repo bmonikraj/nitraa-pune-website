@@ -36,6 +36,7 @@ class EachMemberDetail extends React.Component {
     }
 
     componentDidMount(){
+      console.log(this.props.location)
       var params = queryString.parse(this.props.location.search);
       if(params.mid){
         this.setState({

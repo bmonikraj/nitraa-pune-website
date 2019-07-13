@@ -20,7 +20,8 @@ class MembersDirectory extends React.Component {
       super(props);
       this.sortRows = this.sortRows.bind(this);
       this.handleFilterChange = this.handleFilterChange.bind(this);
-      this.getValidFilterValues = this.getValidFilterValues.bind(this);
+      // this.getValidFilterValues = this.getValidFilterValues.bind(this);
+      this.rowClicked = this.rowClicked.bind(this);
       this.state = {
         responseFetched: 0,
         responseArr: [],
@@ -29,8 +30,10 @@ class MembersDirectory extends React.Component {
         filteredRows: []
       }
     }
-    rowClicked(){
-      window.open("https://youtube.com", "_self");
+    rowClicked(row){
+      if(row>=0){
+        window.open("/memberPage?mid="+this.state.responseArr[row]._id, "_self");
+      }
     }
     componentDidMount(){
       if(localStorage.getItem('authtoken')){
@@ -42,7 +45,18 @@ class MembersDirectory extends React.Component {
           if(response.data.status === "success"){
             let rows = [];
             response.data.data.map((item, index) => {
-                  let tempObj = {id:"", name:"", YOP:"", Email:"", Phone:"", Branch: "", Organization: "", profilePic: ""};
+                  let tempObj = {id:"", name:"", YOP:"", Email:"", Phone:"", Branch: "", Organization: "", profilePic: "", MemStatus: ""};
+                  if(item.reg_due_stamp < 0){
+                    tempObj['MemStatus'] = "Active"
+                  }
+                  else{
+                    if(item.reg_due_stamp - new Date().getTime() > 0){
+                      tempObj['MemStatus'] = "Active"
+                    }
+                    else{
+                      tempObj['MemStatus'] = "Expired"
+                    }
+                  }
                   tempObj['id'] = index+1;
                   tempObj['name'] = item.name;
                   tempObj['YOP'] = (item.yop)?item.yop.split("-")[0]:item.yop;
@@ -84,7 +98,19 @@ class MembersDirectory extends React.Component {
       let rows = [];
       console.log(this.state.responseArr);
       this.state.responseArr.map((item, index) => {
-            let tempObj = {id:"", name:"", YOP:"", Email:"", Phone:"", Branch: "", Organization: "", profilePic: ""};
+                
+            let tempObj = {id:"", name:"", YOP:"", Email:"", Phone:"", Branch: "", Organization: "", profilePic: "", MemStatus:""};
+            if(item.reg_due_stamp < 0){
+              tempObj['MemStatus'] = "Active"
+            }
+            else{
+              if(item.reg_due_stamp - new Date().getTime() > 0){
+                tempObj['MemStatus'] = "Active"
+              }
+              else{
+                tempObj['MemStatus'] = "Expired"
+              }
+            }
             tempObj['id'] = index+1;
             tempObj['name'] = item.name;
             tempObj['YOP'] = (item.yop)?item.yop.split("-")[0]:item.yop;
@@ -97,18 +123,6 @@ class MembersDirectory extends React.Component {
       });
       this.setState({setRows: rows});
     }
-
-    // const sortRows = (initialRows, sortColumn, sortDirection) => rows => {
-    //   console.log(initialRows, sortColumn, sortDirection);
-    //   const comparer = (a, b) => {
-    //     if (sortDirection === "ASC") {
-    //       return a[sortColumn] > b[sortColumn] ? 1 : -1;
-    //     } else if (sortDirection === "DESC") {
-    //       return a[sortColumn] < b[sortColumn] ? 1 : -1;
-    //     }
-    //   };
-    //   return sortDirection === "NONE" ? initialRows : [...rows].sort(comparer);
-    // };
 
     sortRows(initialRows, sortColumn, sortDirection){
       console.log(initialRows, sortColumn, sortDirection);
@@ -132,12 +146,14 @@ class MembersDirectory extends React.Component {
       return newFilters;
     };
 
-    getValidFilterValues(rows, columnId) {
-      console.log(rows, columnId);
-      return rows.map(r => r[columnId]).filter((item, i, a) => {
-          return i === a.indexOf(item);
-      });
-    }
+    // getValidFilterValues(rows, columnId) {
+    //   console.log(rows[0], columnId);
+    //   var t = rows.map(r => r[columnId]).filter((item, i, a) => {
+    //      return i === a.indexOf(item);
+    //   });
+    //   console.log(t)      
+    //   return t;
+    // }
 
     render() {
       var styleTableDiv = {
@@ -148,26 +164,29 @@ class MembersDirectory extends React.Component {
       }
       const defaultColumnProperties = {
         sortable: true,
-        filterable: true
+        filterable: true,
+        resizable:true
       };
 
       const selectors = Data.Selectors;
-      const {
-        NumericFilter,
-        AutoCompleteFilter,
-        MultiSelectFilter,
-        SingleSelectFilter
-      } = Filters;
+      // const {
+      //   NumericFilter,
+      //   AutoCompleteFilter,
+      //   MultiSelectFilter,
+      //   SingleSelectFilter
+      // } = Filters;
 
       const columns = [
-        { key: 'id', name: '#',width: 100},
+        { key: 'id', name: '#',width: 50},
         { key: 'profilePic', name: 'Profile Pic', width: 100},
-        { key: 'name', name: 'Name', width: 200, filterRenderer: AutoCompleteFilter},
-        { key: 'Email', name: 'Email' , width: 220, filterRenderer: AutoCompleteFilter},
-        { key: 'Phone', name: 'Phone' , width: 170, filterRenderer: AutoCompleteFilter},
-        { key: 'YOP', name: 'YOP', width: 80, filterRenderer: AutoCompleteFilter},
-        { key: 'Branch', name: 'Branch', width: 100, filterRenderer: AutoCompleteFilter},
-        { key: 'Organization', name: 'Organization', width: 150, filterRenderer: AutoCompleteFilter}].map(c => ({ ...c, ...defaultColumnProperties}));
+        { key: 'name', name: 'Name', width: 200},
+        { key: 'Email', name: 'Email' , width: 220},
+        { key: 'Phone', name: 'Phone' , width: 170},
+        { key: 'MemStatus', name: 'Membership', width: 100},
+        { key: 'YOP', name: 'YOP', width: 80},
+        { key: 'Branch', name: 'Branch', width:150},
+        { key: 'Organization', name: 'Organization', width:150}].map(c => ({ ...c, ...defaultColumnProperties}));
+        
 
 
         function getRows(rows, filters) {
@@ -282,7 +301,7 @@ class MembersDirectory extends React.Component {
                           rowHeight={100}
                           rowGetter={i => getRows(this.state.setRows, this.state.filters)[i]}
                           rowsCount={this.state.setRows.length}
-                          onRowClick={this.rowClicked.bind(this)}
+                          onRowClick={this.rowClicked}
                           onGridSort = {(sortColumn, sortDirection) =>{
                               console.log(_self_.state);
                               var rows = _self_.sortRows( _self_.state.responseArr, sortColumn, sortDirection);
@@ -298,10 +317,10 @@ class MembersDirectory extends React.Component {
                           onClearFilters={() => {
                             _self_.setState({filters: {}});
                           }}
-                          getValidFilterValues={columnKey => {
-                            console.log(columnKey);
-                            _self_.getValidFilterValues(_self_.state.filteredRows, columnKey);
-                          }}
+                           //getValidFilterValues={columnKey => {
+                           // console.log(columnKey);
+                           // _self_.getValidFilterValues(_self_.state.filteredRows, columnKey);
+                           //}}
                           />
                     </div>
                   <Footer />
