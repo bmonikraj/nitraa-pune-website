@@ -246,7 +246,7 @@ class LoginPage extends React.Component {
                         <Col xs={12} md={{ span: 6, offset: 3 }}>
                             <Form.Label style={formLabelStyle}>One click login with</Form.Label>
                             <Row>
-                                <Col>
+                                {/*<Col>
                                   <FacebookProvider appId="402065750608440">
                                     <Login
                                       scope="name,email,picture"
@@ -256,7 +256,7 @@ class LoginPage extends React.Component {
                                       )}
                                     />
                                   </FacebookProvider>
-                                </Col>
+                                </Col>*/}
                                 <Col>
                                   <GoogleLogin
                                     clientId="852876963227-2h0cv9040sjn5567bdh43ejrg364jt6p.apps.googleusercontent.com"
