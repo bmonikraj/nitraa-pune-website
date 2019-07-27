@@ -16,10 +16,10 @@ router = express.Router();
 
 const headers = {
 
-     'X-Api-Key': '76c7b3743040493f8505ef6f2067f07c',
-     'X-Auth-Token': 'fbe5f65cce4cf44f9b8438b62e8fa7fa'
+     'X-Api-Key': '2ecf8770b1e7564dacb784d94c18bac7',
+     'X-Auth-Token': '16e7c964705533dd4a7a3b0667c90dcb'
 
-}
+ }
 
 router.post('/payment', function(req, res, next) {
     jwt_token = req.get('authtoken');
