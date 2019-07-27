@@ -1,3 +1,19 @@
+var express = require('express'),
+    path = require('path'),
+    mongo = require('mongodb').MongoClient,
+    ObjectID = require('mongodb').ObjectID,
+    bodyParser = require('body-parser'),
+    app = express();
+var jwt = require('jsonwebtoken');
+var jwt_salt = require('../constant/jwt/index');
+var urlMongo = require('../constant/mongodbAddress/index');
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+const request = require('request');
+router = express.Router();
+
 router.post('/webhook', function(req, res, next) {
     mongo.connect(urlMongo, {useNewUrlParser : true}, function (err_mdbcon, db) {
       if (err_mdbcon == null) {
