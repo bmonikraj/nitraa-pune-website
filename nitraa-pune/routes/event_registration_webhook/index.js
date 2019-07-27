@@ -14,7 +14,7 @@ app.use(bodyParser.urlencoded({
 const request = require('request');
 router = express.Router();
 
-router.post('/payment-webhook', function(req, res, next) {
+router.post('/', function(req, res, next) {
     mongo.connect(urlMongo, {useNewUrlParser : true}, function (err_mdbcon, db) {
       if (err_mdbcon == null) {
         let dbo = db.db('nitraapune');
