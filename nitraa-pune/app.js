@@ -24,6 +24,7 @@ var membersDirectory = require('./routes/membersDirectory/index');
 var personalPhotos = require('./routes/personalPhotos/index');
 var memberRegistration = require('./routes/memberRegistration/index');
 var eventRegistrationWebhook = require('./routes/event_registration_webhook/index');
+var membershipWebhook = require('./routes/membership_webhook/index');
 
 var app = express();
 
@@ -62,6 +63,7 @@ app.use('/members-directory', membersDirectory);
 app.use('/personal-pictures', personalPhotos);
 app.use('/member-reg', memberRegistration);
 app.use('/event-reg-webhook', eventRegistrationWebhook);
+app.use('/member-reg-webhook', membershipWebhook);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
